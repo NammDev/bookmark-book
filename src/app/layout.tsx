@@ -4,6 +4,7 @@ import Script from 'next/script'
 import { ClerkProvider } from '@clerk/nextjs'
 
 import './globals.css'
+import { ThemeProvider } from '@/components/layouts/theme-provider'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
 
@@ -74,7 +75,16 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <ClerkProvider>
       <html lang='en' className='h-full' suppressHydrationWarning>
-        <body className={`${inter.className} flex h-full bg-background`}>{children}</body>
+        <body className={`${inter.className} flex h-full bg-background`}>
+          <ThemeProvider
+            attribute='class'
+            defaultTheme='system'
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </body>
 
         {/* <!-- Google tag (gtag.js) --> */}
         {/* <Script
