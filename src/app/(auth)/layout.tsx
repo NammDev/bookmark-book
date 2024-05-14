@@ -13,17 +13,17 @@ export default function AuthLayout({ children }: React.PropsWithChildren) {
       <main className='absolute left-1/2 top-1/2 flex w-full -translate-x-1/2 -translate-y-1/2 items-center lg:static lg:left-0 lg:top-0 lg:flex lg:translate-x-0 lg:translate-y-0'>
         {children}
       </main>
-      <div className='relative aspect-video size-full'>
+      <div className='relative aspect-video sm:size-full'>
         <Image
           src='/images/auth-layout.webp'
           alt='A skateboarder dropping into a bowl'
           fill
-          className='absolute inset-0 object-cover'
+          className='absolute inset-0 object-cover hidden sm:flex'
           priority
           sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
         />
-        <div className='absolute inset-0 bg-gradient-to-t from-background to-black/80 lg:to-black/40' />
-        <div className='absolute bottom-4 right-4 z-20 line-clamp-1 rounded-md bg-muted px-3 py-1.5 text-sm text-muted-foreground'>
+        <div className='absolute inset-0 bg-gradient-to-t from-background to-black/80 lg:to-black/40 hidden sm:flex' />
+        <div className='absolute bottom-4 right-4 z-20 line-clamp-1 rounded-md bg-muted px-3 py-1.5 text-sm text-muted-foreground hidden sm:flex'>
           Photo by{' '}
           <a
             href='https://unsplash.com/ja/@pixelperfektion?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText'

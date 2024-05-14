@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { formatDate } from '@/lib/date'
 import { Skeleton } from '../ui/skeleton'
 import { Logo } from '../icons'
-// import Profile from './profile'
+import Profile from '../profile'
 
 export default function DashboardHeader({
   headerText,
@@ -36,7 +36,7 @@ export default function DashboardHeader({
       </div>
       <div className='flex items-center'>
         {ShareIcon}
-        {/* <Profile className='max-sm:flex hidden mr-3' /> */}
+        <Profile className='max-sm:flex hidden mr-3' />
       </div>
     </div>
   )
