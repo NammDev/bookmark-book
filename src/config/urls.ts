@@ -9,7 +9,7 @@ export const urls = {
   homeWithoutProtocol: home,
   home: `${protocol}${home}`,
   authCallback: `${protocol}app.${home}/auth/callback/`,
-  account: `${protocol}app.${home}/account`,
+  account: `${protocol}${home}/account`,
   intro: `${protocol}app.${home}/intro`,
   settings: `${protocol}app.${home}/settings`,
   app: `${protocol}app.${home}`,

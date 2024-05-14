@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import Script from 'next/script'
+import { ClerkProvider } from '@clerk/nextjs'
 
 import './globals.css'
 
@@ -71,11 +72,12 @@ export const viewport: Viewport = {
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang='en' className='h-full' suppressHydrationWarning>
-      <body className={`${inter.className} flex h-full bg-background`}>{children}</body>
+    <ClerkProvider>
+      <html lang='en' className='h-full' suppressHydrationWarning>
+        <body className={`${inter.className} flex h-full bg-background`}>{children}</body>
 
-      {/* <!-- Google tag (gtag.js) --> */}
-      {/* <Script
+        {/* <!-- Google tag (gtag.js) --> */}
+        {/* <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`}
         strategy='afterInteractive'
       />
@@ -86,6 +88,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 
         gtag('config', '${GOOGLE_ANALYTICS_ID}');`}
       </Script> */}
-    </html>
+      </html>
+    </ClerkProvider>
   )
 }
