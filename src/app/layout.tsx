@@ -5,6 +5,9 @@ import { ClerkProvider } from '@clerk/nextjs'
 
 import './globals.css'
 import { ThemeProvider } from '@/components/layouts/theme-provider'
+import { TooltipProvider } from '@/components/ui/tooltip'
+import { Toaster } from '@/components/ui/sonner'
+import NextTopLoader from 'nextjs-toploader'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
 
@@ -76,14 +79,16 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     <ClerkProvider>
       <html lang='en' className='h-full' suppressHydrationWarning>
         <body className={`${inter.className} flex h-full bg-background`}>
+          <NextTopLoader height={2} shadow={false} color='#cb0000' showSpinner={false} />
           <ThemeProvider
             attribute='class'
             defaultTheme='system'
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
           </ThemeProvider>
+          <Toaster expand visibleToasts={2} richColors />
         </body>
 
         {/* <!-- Google tag (gtag.js) --> */}
