@@ -2,12 +2,25 @@
 
 import Link from 'next/link'
 
-import { FavIcon, HomeIcon, Logo, TagsIcon } from '../icons'
-import Profile from '../profile'
-// import SearchIcon from '../search'
-import NavLink from './nav-link'
-import { SettingsLink } from './setting-links'
+import { cn } from 'lib/utils'
+
 import AddIcon from './add-icon'
+import { FavIcon, HomeIcon, Logo, SettingsIcon, TagsIcon } from './icons'
+import NavLink from './nav-link'
+import Profile from './profile'
+import SearchIcon from './search'
+
+const SettingsLink = ({ className }: { className?: string }) => (
+  <NavLink
+    Icon={(props: any) => <SettingsIcon {...props} />}
+    className={cn(
+      `rounded-xl max-sm:hidden mt-2 p-2.5 transition-colors hover:bg-accent order-5`,
+      className
+    )}
+    href='/settings'
+    title='Settings'
+  />
+)
 
 export default function Sidebar() {
   return (
@@ -18,7 +31,7 @@ export default function Sidebar() {
           <span className='sr-only'>Home page</span>
         </Link>
         <NavLink Icon={(props: any) => <HomeIcon {...props} />} href={'/'} title='Home' />
-        {/* <SearchIcon /> */}
+        <SearchIcon />
         <NavLink
           Icon={(props: any) => <FavIcon {...props} />}
           className='max-sm:order-4'
