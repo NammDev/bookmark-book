@@ -12,7 +12,7 @@ export const urls = {
   account: `${protocol}${home}/account`,
   intro: `${protocol}${home}/intro`,
   settings: `${protocol}${home}/settings`,
-  app: `${protocol}${home}`,
+  app: `${protocol}${home}/dashboard`,
   api: `${protocol}${home}/api`,
   nonAppApi: `${protocol}${home}/api`,
   twitter: 'https://twitter.com/gokul_i',

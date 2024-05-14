@@ -88,7 +88,12 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           >
             <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
           </ThemeProvider>
-          <Toaster expand visibleToasts={2} richColors />
+          <Toaster
+            expand
+            visibleToasts={2}
+            richColors
+            toastOptions={{ className: 'max-sm:mb-[4.5rem]' }}
+          />
         </body>
 
         {/* <!-- Google tag (gtag.js) --> */}
