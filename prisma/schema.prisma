@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                    String     @id
+  email                 String     @unique
+  avatarUrl             String?
+  firstName             String?
+  lastName              String?
+  fullName              String?
+  hasWelcomed           Boolean    @default(false)
+  previewImage          Boolean    @default(false)
+  uploadCount           Int        @default(0)
+  shareCount            Int        @default(0)
+  usage                 Json       @default("{\"bookmarks\": 0, \"tags\": 0, \"favorites\": 0, \"sessions\": 0}")
+  planStatus            String     @default("free")
+  billingCycleStartDate DateTime   @default(now())
+  orderInfo             Json       @default("{\"status\": \"\", \"number\": 0, \"store_id\": 0, \"identifier\":\"\"}")
+  Bookmarks             Bookmark[]
+  Tag                   Tag[]
+}
+
+model Bookmark {
+  id           Int           @id @default(autoincrement())
+  title        String
+  url          String
+  description  String?
+  metadata     Json?
+  isFav        Boolean       @default(false)
+  previewImage Boolean       @default(true)
+  userId       String
+  User         User          @relation(fields: [userId], references: [id])
+  BookmarkTag  BookmarkTag[]
+}
+
+model Tag {
+  id          Int           @id @default(autoincrement())
+  name        String
+  userId      String
+  shared      Boolean       @default(false)
+  sharedHash  String?
+  User        User          @relation(fields: [userId], references: [id])
+  BookmarkTag BookmarkTag[]
+}
+
+model BookmarkTag {
+  bookmarkId Int
+  tagId      Int
+  Bookmark   Bookmark @relation(fields: [bookmarkId], references: [id])
+  Tag        Tag      @relation(fields: [tagId], references: [id])
+
+  @@id([bookmarkId, tagId])
+}
