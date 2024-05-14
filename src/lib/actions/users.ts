@@ -53,3 +53,15 @@ export async function createUser() {
     },
   })
 }
+
+export const setWelcomePageAsVisited = async () => {
+  const userAuth = await getCachedAuthUser()
+  try {
+    await db.user.update({
+      where: { id: userAuth?.id as string },
+      data: { hasWelcomed: true },
+    })
+  } catch {
+    throw new Error("User hasn't been welcomed")
+  }
+}

@@ -1,4 +1,5 @@
 import { Shell } from '@/components/shell'
+import { urls } from '@/config/urls'
 import { createUser, getCachedAuthUser, getCachedUser } from '@/lib/actions/users'
 import { Loader2 } from 'lucide-react'
 import { redirect } from 'next/navigation'
@@ -12,7 +13,12 @@ export default async function SSOCallbackPage() {
     if (!userData) {
       userData = await createUser()
     }
-    redirect('/')
+
+    if (!userData?.hasWelcomed) {
+      redirect(urls.intro)
+    } else {
+      redirect(urls.account)
+    }
   }
 
   return (

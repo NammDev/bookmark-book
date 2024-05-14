@@ -1,7 +1,7 @@
 import Link from 'next/link'
-// import { setWelcomePageAsVisited } from 'app/actions/user'
 // import UploadBookmarks from './upload'
 import { Logo } from '@/components/icons'
+import { setWelcomePageAsVisited } from '@/lib/actions/users'
 
 const title = 'Bookmark it. | Import Bookmarks'
 const description =
@@ -13,7 +13,7 @@ export const metadata = {
 }
 
 export default async function Page() {
-  // await setWelcomePageAsVisited()
+  await setWelcomePageAsVisited()
 
   return (
     <div className='max-w-[600px] m-auto flex min-h-dvh w-full homepage-account'>
