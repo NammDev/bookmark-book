@@ -30,7 +30,7 @@ export default async function Page() {
           </div>
           {/* <UploadBookmarks /> */}
           <Link
-            href='/'
+            href='/dashboard'
             className='items-center hover:text-primary active:text-primary underline text-muted-foreground mt-2 h-[40px] tracking-wide text-sm flex justify-center py-2 px-5 transition-colors'
           >
             Do it later
