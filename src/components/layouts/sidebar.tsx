@@ -22,14 +22,14 @@ export default function Sidebar() {
         <NavLink
           Icon={(props: any) => <FavIcon {...props} />}
           className='max-sm:order-4'
-          href={'/favorites'}
+          href={'/dashboard/favorites'}
           title='Favorites'
         />
 
         <NavLink
           Icon={(props: any) => <TagsIcon {...props} />}
           className='max-sm:order-4'
-          href={'/tags'}
+          href={'/dashboard/tags'}
           title='Tags'
         />
 

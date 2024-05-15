@@ -24,7 +24,7 @@ export const getBookmarks = async () => {
   const user = await getCachedUser()
   if (!user) return []
 
-  const bookmarks = await db.bookmark.findMany({
+  return await db.bookmark.findMany({
     where: {
       userId: user.id,
     },
@@ -44,8 +44,33 @@ export const getBookmarks = async () => {
       createdAt: 'desc',
     },
   })
+}
 
-  return bookmarks
+export const getFavBookmarks = async () => {
+  const user = await getCachedUser()
+  if (!user) return []
+
+  return await db.bookmark.findMany({
+    where: {
+      userId: user.id,
+      isFav: true,
+    },
+    include: {
+      BookmarkTag: {
+        select: {
+          Tag: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      },
+    },
+    orderBy: {
+      updatedAt: 'desc',
+    },
+  })
 }
 
 // export const updateBookmark = async (id: Bookmark['id'], bookmark: BookmarkUpdate) => {
@@ -135,27 +160,6 @@ export const getBookmarks = async () => {
 //     return new Error('Unable to refresh bookmark.')
 //   }
 //   revalidateTag('supabase')
-// }
-
-// export const getFavBookmarks = async () => {
-//   const user = await getAuthUser()
-//   if (!user) {
-//     return []
-//   }
-
-//   const supabase = await createClient()
-//   const { data, error } = await supabase
-//     .from('bookmarks')
-//     .select(`*, bookmarks_tags (tags!inner (id,name))`)
-//     .eq('user_id', user.id)
-//     .eq('is_fav', true)
-//     .order('updated_at', { ascending: false })
-//     .returns<BookmarkModified[]>()
-
-//   if (error) {
-//     return []
-//   }
-//   return data
 // }
 
 // export const getBookmarksForTag = async (slug: string) => {

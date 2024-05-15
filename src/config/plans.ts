@@ -1,6 +1,6 @@
-// import { PlansType } from 'types/data'
+import { PlansType } from '@/types/data'
 
-export const plans: any = {
+export const plans: PlansType = {
   free: {
     type: 'free',
     name: 'Free',
