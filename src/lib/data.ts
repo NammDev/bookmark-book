@@ -1,22 +1,22 @@
 import { plans } from '@/config/plans'
 import { BookmarkModified, UserModified } from '@/types/data'
 import { addYears } from './date'
-// import groupBy from 'object.groupby'
+import groupBy from 'object.groupby'
 
-// export const groupByDate = (data: BookmarkModified[]) => {
-//   if (!data) return {}
-//   return groupBy(data, ({ created_at }) => {
-//     const date = new Date(created_at)
-//     const dateStr = new Intl.DateTimeFormat('en-US').format(date).replace(/\//g, '-')
-//     return dateStr
-//   }) as { [key: string]: BookmarkModified[] }
-// }
+export const groupByDate = (data: BookmarkModified[]) => {
+  if (!data) return {}
+  return groupBy(data, ({ createdAt }) => {
+    const date = new Date(createdAt)
+    const dateStr = new Intl.DateTimeFormat('en-US').format(date).replace(/\//g, '-')
+    return dateStr
+  }) as { [key: string]: BookmarkModified[] }
+}
 
 export const filterByTagName = (data: BookmarkModified[], tagName: string) => {
   if (!data) return []
   return data.filter((datum) => {
-    return datum.bookmarksTags.some((bookmarkTag) => {
-      return bookmarkTag.tags.name === tagName
+    return datum.BookmarkTag.some((bookmarkTag) => {
+      return bookmarkTag.Tag.name === tagName
     })
   })
 }

@@ -1,19 +1,24 @@
-import { Bookmark, User } from '@prisma/client'
+import { Bookmark, Prisma, User } from '@prisma/client'
+
+declare global {
+  namespace PrismaJson {
+    type metadata = {
+      image: string
+      isFallback?: boolean
+      isViaExtension?: boolean
+    }
+  }
+}
 
 export type BookmarkModified = Bookmark & {
-  metadata: {
-    image: string
-    isFallback?: boolean
-    isViaExtension?: boolean
-  }
-  bookmarksTags: { tags: { id: string; name: string } }[]
+  metadata: Prisma.JsonValue
+  BookmarkTag: {
+    Tag: {
+      id: number
+      name: string
+    }
+  }[]
 }
-// export type BookmarkInsertModified = BookmarkInsert & {
-//   user_id?: string
-//   metadata: {
-//     image: string
-//   }
-// }
 
 export type MetaTags = {
   title: string
