@@ -116,3 +116,20 @@ export const incrementFavUsage = async (count: number = 1) => {
     },
   })
 }
+
+export const incrementTagUsage = async (count: number = 1) => {
+  const user = await getCachedUser()
+  if (!user) return new Error('Unable to increment usage.')
+
+  const usage = JSON.parse(JSON.stringify(user.usage))
+
+  return await db.user.update({
+    where: { id: user.id },
+    data: {
+      usage: {
+        ...usage,
+        tags: usage.tags + count,
+      },
+    },
+  })
+}

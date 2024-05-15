@@ -4,6 +4,8 @@ import { revalidateTag } from 'next/cache'
 import { formatDate } from '@/lib/date'
 import { getCachedAuthUser } from './users'
 import { db } from '../db'
+import { Bookmark, Tag } from '@prisma/client'
+import { TagInsertType } from '../validations/tag'
 
 const dateOptions = {
   day: 'numeric',
@@ -36,77 +38,65 @@ export const getTags = async () => {
   return tags
 }
 
-// export const createTag = async (id: Bookmark['id'], tag: TagInsert) => {
-//   const user = await getAuthUser()
-//   if (!user) {
-//     return new Error('User is not authenticated.')
-//   }
+export const createTag = async (id: Bookmark['id'], tag: TagInsertType) => {
+  const user = await getCachedAuthUser()
+  if (!user) return []
+  try {
+    const newTag = await db.tag.create({
+      data: {
+        ...tag,
+        userId: user.id,
+      },
+    })
+    await createBookmarkTag(id, newTag.id)
+    revalidateTag('tags')
+  } catch (error) {
+    return new Error('Unable to create a tag.')
+  }
+}
 
-//   const supabase = await createClient()
-//   const { error: tagError, data: newTag } = await supabase
-//     .from('tags')
-//     .insert({ ...tag, user_id: user.id })
-//     .select()
-//     .single()
+export const createBookmarkTag = async (bookmarkId: Bookmark['id'], tagId: Tag['id']) => {
+  try {
+    await db.bookmarkTag.create({
+      data: {
+        bookmarkId,
+        tagId,
+      },
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
 
-//   if (tagError) {
-//     return new Error('Unable to create a tag.')
-//   }
+export const addTagToBookmark = async (
+  id: Bookmark['id'],
+  tagId: Tag['id'],
+  isChecked: boolean
+) => {
+  const user = await getCachedAuthUser()
+  if (!user) return []
 
-//   const { error: bookmarkError } = await supabase
-//     .from('bookmarks_tags')
-//     .insert({ bookmark_id: id, tag_id: newTag.id, user_id: user.id })
+  if (!isChecked) {
+    await createBookmarkTag(id, tagId)
 
-//   if (bookmarkError) {
-//     return new Error('Unable to add tag to the bookmark.')
-//   }
-
-//   revalidateTag('supabase')
-// }
-
-// export const addTagToBookmark = async (
-//   id: Bookmark['id'],
-//   tagId: Tag['id'],
-//   isChecked: boolean
-// ) => {
-//   const user = await getAuthUser()
-//   if (!user) {
-//     return new Error('User is not authenticated.')
-//   }
-
-//   const supabase = await createClient()
-
-//   if (!isChecked) {
-//     const { error } = await supabase.from('bookmarks_tags').insert({
-//       bookmark_id: id,
-//       tag_id: tagId,
-//       user_id: user.id,
-//     })
-
-//     await supabase
-//       .from('tags')
-//       .update({
-//         updated_at: new Date().toISOString(),
-//       })
-//       .eq('id', tagId)
-
-//     if (error) {
-//       return new Error('Unable to remove tag from bookmark.')
-//     }
-//   } else {
-//     const { error } = await supabase
-//       .from('bookmarks_tags')
-//       .delete()
-//       .eq('bookmark_id', id)
-//       .eq('tag_id', tagId)
-
-//     if (error) {
-//       return new Error('Unable to add tag to bookmark.')
-//     }
-//   }
-
-//   revalidateTag('supabase')
-// }
+    // await supabase
+    //   .from('tags')
+    //   .update({
+    //     updated_at: new Date().toISOString(),
+    //   })
+    //   .eq('id', tagId)
+  } else {
+    await db.bookmarkTag.delete({
+      where: {
+        bookmarkId_tagId: {
+          bookmarkId: id,
+          tagId: tagId,
+        },
+      },
+    })
+  }
+  revalidateTag('supabase')
+}
 
 // export const deleteTag = async (tagId: Tag['id']) => {
 //   const user = await getAuthUser()

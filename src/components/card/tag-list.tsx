@@ -1,12 +1,8 @@
 'use client'
 
-import { startTransition, useEffect, useOptimistic, useState } from 'react'
+import { useEffect, useOptimistic, useState, useTransition } from 'react'
 
 import { toast } from 'sonner'
-
-// server
-// import { addTagToBookmark, createTag } from 'app/actions/tags'
-// import { incrementTagUsage } from 'app/actions/user'
 
 import { CheckIcon } from '@/components/icons'
 import {
@@ -25,6 +21,8 @@ import { Tag } from '@prisma/client'
 import { useUser } from '../layouts/user-provider'
 import { TagInsertType } from '@/lib/validations/tag'
 import { PublicIconWithTooltip } from './public-icon-with-tooltip'
+import { incrementTagUsage } from '@/lib/actions/users'
+import { addTagToBookmark, createTag } from '@/lib/actions/tags'
 
 type TagListProps = {
   data: BookmarkModified
@@ -36,6 +34,7 @@ export default function TagList({ data, tags }: TagListProps) {
   const [searchText, setSearchText] = useState('')
   const [loading, setLoading] = useState(false)
   const [optimisticData, setOptimisticData] = useOptimistic<BookmarkModified>(data)
+  const [isPending, startTransition] = useTransition()
 
   useEffect(() => {
     startTransition(() => setOptimisticData(data))
@@ -61,8 +60,8 @@ export default function TagList({ data, tags }: TagListProps) {
             } as BookmarkModified)
         )
       )
-      // await incrementTagUsage()
-      // await createTag(data.id, payload)
+      await incrementTagUsage()
+      await createTag(data.id, payload)
       toast.success('Tag is added to bookmark.')
       setSearchText('')
     } catch (error) {
@@ -105,7 +104,7 @@ export default function TagList({ data, tags }: TagListProps) {
           )
         )
       }
-      // await addTagToBookmark(data.id, tag.id, isChecked)
+      await addTagToBookmark(data.id, tag.id, isChecked)
     } catch {
       toast.error(`Unable to add/remove a tag. Try again.`)
       if (isChecked) {
@@ -260,6 +259,7 @@ export default function TagList({ data, tags }: TagListProps) {
                 await onCreate()
               }}
               value={searchText}
+              disabled={loading || isPending}
             >
               {searchText}
             </CommandItem>
