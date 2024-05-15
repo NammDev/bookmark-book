@@ -45,7 +45,7 @@ export default function AddBookmarkInput({
         return
       }
       setLoading(true)
-      const ogData: MetaTags = await getOg(inputUrl)
+      const ogData = (await getOg(inputUrl)) as MetaTags
       const payload: BookmarkInsertSchemaType = {
         url: inputUrl,
         description: ogData.description?.trim(),

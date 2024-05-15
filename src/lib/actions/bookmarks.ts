@@ -10,7 +10,7 @@ export const createBookmark = async (bookmark: BookmarkInsertSchemaType) => {
     const newBookmark = await db.bookmark.create({
       data: {
         ...bookmark,
-        metadata: undefined,
+        metadata: bookmark.metadata as NullableJsonNullValueInput | InputJsonValue | undefined,
       },
     })
     revalidateTag(`subscriptions`)

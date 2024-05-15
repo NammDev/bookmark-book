@@ -24,7 +24,7 @@ export type MetaTags = {
   title: string
   description: string
   image: string
-  isFallback: boolean
+  isFallback?: boolean
 }
 
 export type UserModified = User & {

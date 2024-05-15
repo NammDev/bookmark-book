@@ -10,10 +10,12 @@ export async function getOg(url: string) {
       headers: { 'User-Agent': 'bmrk.cc Bot' },
     })
     const html = await response.text()
+    let metatags: MetaTags
     if (!html) {
-      return { title: url, description: '', image: '' }
+      metatags = { title: url, description: '', image: '' }
+    } else {
+      metatags = extractMetaTags(html, url)
     }
-    const metatags: { [key: string]: string | boolean } = extractMetaTags(html, url)
     return metatags
   } catch (error) {
     console.error(error)

@@ -6,6 +6,7 @@ import Link from 'next/link'
 import humanizeUrl from 'humanize-url'
 import { BookmarkModified } from '@/types/data'
 import { useUser } from '../layouts/user-provider'
+import { metadata } from '@/app/layout'
 
 // https://stackoverflow.com/a/33919020/266535
 const blurDataURL = `data:image/gif;base64,R0lGODlhAQABAPAAABsbG////yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==`
@@ -16,7 +17,6 @@ export default function CardMedia({ data }: { data: BookmarkModified }) {
 
   //@ts-ignore
   if (!data.metadata?.image || !data.previewImage || !user.previewImage) {
-    console.log(data)
     return null
   }
 
