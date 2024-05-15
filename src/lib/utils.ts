@@ -11,3 +11,12 @@ export function getUserEmail(user: User | null) {
     user?.emailAddresses?.find((e) => e.id === user.primaryEmailAddressId)?.emailAddress ?? ''
   return email
 }
+
+export const isValidUrl = (url: string) => {
+  try {
+    new URL(url)
+    return true
+  } catch (e) {
+    return false
+  }
+}

@@ -5,7 +5,7 @@ import { useHotkeys } from 'react-hotkeys-hook'
 import { AddIcon as Add } from '@/components/icons'
 import { cn } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-// import AddBookmark from './modal/add-bookmark'
+import AddBookmark from '../modal/add-bookmark'
 
 export default function AddIcon({ className }: { className?: string }) {
   const [open, setOpen] = useState(false)
@@ -38,7 +38,7 @@ export default function AddIcon({ className }: { className?: string }) {
         </TooltipContent>
       </Tooltip>
 
-      {/* {open ? <AddBookmark open={open} onHide={setOpen} /> : null} */}
+      {open ? <AddBookmark open={open} onHide={setOpen} /> : null}
     </>
   )
 }
