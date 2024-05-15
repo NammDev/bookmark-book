@@ -6,11 +6,11 @@ import { cn, isValidUrl } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import Loader, { UploadIcon } from '@/components/icons'
 import { Input } from '@/components/ui/input'
-
-// server
-// import { incrementBookmarkUsage } from 'app/actions/user'
-// import { createBookmark } from 'app/actions/bookmarks'
-
+import { createBookmark } from '@/lib/actions/bookmarks'
+import { incrementBookmarkUsage } from '@/lib/actions/users'
+import { MetaTags } from '@/types/data'
+import { getOg } from '@/lib/actions/og'
+import { BookmarkInsertSchemaType } from '@/lib/validations/bookmark'
 import { useUser } from '../layouts/user-provider'
 
 // chrome extension
@@ -18,13 +18,6 @@ import { useUser } from '../layouts/user-provider'
 
 // upload modal
 // import UploadModal from 'components/modal/upload'
-
-// tags
-import { MetaTags } from '@/types/data'
-import { getOg } from '@/lib/actions/og'
-import { BookmarkInsertSchemaType } from '@/lib/validations/bookmark'
-import { createBookmark } from '@/lib/actions/bookmarks'
-import { incrementBookmarkUsage } from '@/lib/actions/users'
 
 type AddBookmarkInputProps = {
   className?: string

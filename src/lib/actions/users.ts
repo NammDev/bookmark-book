@@ -92,7 +92,7 @@ export const incrementBookmarkUsage = async (count: number = 1) => {
     data: {
       usage: {
         bookmark: {
-          increment: count,
+          bookmarks: count,
         },
       },
     },

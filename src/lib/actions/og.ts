@@ -1,12 +1,83 @@
+'use server'
+
+import { parse } from 'node-html-parser'
 import { MetaTags } from '@/types/data'
+import { setImagePath } from '../utils'
 
 export async function getOg(url: string) {
-  const data = await fetch(`/api/open-graph?url=${encodeURIComponent(url)}`, {
-    cache: 'force-cache',
-    next: { revalidate: 60000 },
-  })
-  if (!data.ok) {
-    throw new Error('Failed to fetch data')
+  try {
+    const response = await fetch(url, {
+      headers: { 'User-Agent': 'bmrk.cc Bot' },
+    })
+    const html = await response.text()
+    if (!html) {
+      return { title: url, description: '', image: '' }
+    }
+    const metatags: { [key: string]: string | boolean } = extractMetaTags(html, url)
+    return metatags
+  } catch (error) {
+    console.error(error)
   }
-  return (await data.json()) as MetaTags
+}
+
+const allowedTags = [
+  'title',
+  'og:title',
+  'twitter:title',
+  'description',
+  'og:description',
+  'twitter:description',
+  'og:image',
+  'twitter:image',
+  'icon',
+  'apple-touch-icon',
+  'shortcut icon',
+]
+
+function extractMetaTags(html: string, url: string) {
+  const root = parse(html)
+  const objectMap: { [key: string]: string } = {}
+
+  // Extract all meta tags
+  root.querySelectorAll('meta').forEach(({ attributes }) => {
+    const property = attributes.property || attributes.name || attributes.href
+    if (!objectMap[property] && allowedTags.includes(property)) {
+      objectMap[property] = attributes.content
+    }
+  })
+
+  // Extract all link tags
+  root.querySelectorAll('link').forEach(({ attributes }) => {
+    const { rel, href } = attributes
+    if (rel && href && allowedTags.includes(rel)) {
+      objectMap[rel] = href
+    }
+  })
+
+  const title =
+    objectMap['og:title'] ||
+    objectMap['twitter:title'] ||
+    root.querySelector('title')?.innerText ||
+    url
+
+  const description = objectMap['og:description'] || objectMap['description'] || ''
+
+  const imageSrc =
+    objectMap['og:image'] ||
+    objectMap['twitter:image'] ||
+    objectMap['apple-touch-icon'] ||
+    objectMap['icon'] ||
+    objectMap['shortcut icon']
+
+  const favIconImage =
+    objectMap['apple-touch-icon'] || objectMap['icon'] || objectMap['shortcut icon']
+
+  const image = setImagePath(url, imageSrc)
+
+  return {
+    title,
+    description,
+    image,
+    ...(image && { is_fallback: imageSrc === favIconImage }),
+  } as MetaTags
 }
