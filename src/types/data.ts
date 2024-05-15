@@ -1,10 +1,25 @@
-import { User } from '@prisma/client'
+import { Bookmark, User } from '@prisma/client'
+
+export type BookmarkModified = Bookmark & {
+  metadata: {
+    image: string
+    isFallback?: boolean
+    isViaExtension?: boolean
+  }
+  bookmarksTags: { tags: { id: string; name: string } }[]
+}
+// export type BookmarkInsertModified = BookmarkInsert & {
+//   user_id?: string
+//   metadata: {
+//     image: string
+//   }
+// }
 
 export type MetaTags = {
   title: string
   description: string
   image: string
-  is_fallback: boolean
+  isFallback: boolean
 }
 
 export type UserModified = User & {
@@ -13,9 +28,9 @@ export type UserModified = User & {
     bookmarks: number
     favorites: number
   }
-  order_info: {
+  orderInfo: {
     identifier: string
-    store_id: string
+    storeId: string
     number: string
     status: string
   }

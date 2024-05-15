@@ -12,17 +12,16 @@ import { Input } from '@/components/ui/input'
 // import { incrementBookmarkUsage } from 'app/actions/user'
 // import { createBookmark } from 'app/actions/bookmarks'
 
-// get user
-// import { useUser } from 'components/context/user'
+import { useUser } from '../layouts/user-provider'
 
 // chrome extension
 // import { refreshInChromeExt } from 'lib/chrome-extension'
 
 // upload modal
 // import UploadModal from 'components/modal/upload'
-import { MetaTags } from '@/types/data'
 
-// types?
+// tags
+import { MetaTags } from '@/types/data'
 
 type AddBookmarkInputProps = {
   className?: string
@@ -40,16 +39,16 @@ export default function AddBookmarkInput({
   const [url, setUrl] = useState('')
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
-  // const { user, currentPlan, isProPlan } = useUser()
-  // const hasUsageLimitedReached = user?.usage.bookmarks >= currentPlan.limit.bookmarks
+  const { user, currentPlan, isProPlan } = useUser()
+  const hasUsageLimitedReached = user?.usage.bookmarks >= currentPlan.limit.bookmarks
 
   const onSubmit = async (inputUrl: string) => {
     try {
-      // if (hasUsageLimitedReached) {
-      //   toast.error(`Bookmark limit reached! ${isProPlan ? '' : 'Upgrade to pro plan.'}`)
-      //   return
-      // }
-      // setLoading(true)
+      if (hasUsageLimitedReached) {
+        toast.error(`Bookmark limit reached! ${isProPlan ? '' : 'Upgrade to pro plan.'}`)
+        return
+      }
+      setLoading(true)
       // const ogData: MetaTags = await getOg(inputUrl)
       // const payload: any = {
       //   url: inputUrl,
@@ -67,19 +66,19 @@ export default function AddBookmarkInput({
     } catch (error) {
       toast.error(`Unable to add bookmark, try again.`)
     } finally {
-      // if (!hasUsageLimitedReached) {
-      //   setLoading(false)
-      //   onHide?.()
-      // }
+      if (!hasUsageLimitedReached) {
+        setLoading(false)
+        onHide?.()
+      }
     }
   }
 
-  const onPaste = async (event: ClipboardEvent<HTMLInputElement>) => {
-    const pastedText = event.clipboardData?.getData('text')
-    if (isValidUrl(pastedText)) {
-      await onSubmit(pastedText)
-    }
-  }
+  // const onPaste = async (event: ClipboardEvent<HTMLInputElement>) => {
+  //   const pastedText = event.clipboardData?.getData('text')
+  //   if (isValidUrl(pastedText)) {
+  //     await onSubmit(pastedText)
+  //   }
+  // }
 
   return (
     <div className={cn('h-26 flex flex-col px-1 sm:border-border sm:border-r border-b', className)}>
@@ -106,7 +105,7 @@ export default function AddBookmarkInput({
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
               setUrl(event.target.value)
             }}
-            onPaste={onPaste}
+            // onPaste={onPaste}
             value={url}
             data-1p-ignore
           />

@@ -1,9 +1,9 @@
 // import { getTags } from 'app/actions/tags'
 // import { getBookmarks } from 'app/actions/bookmarks'
 
+import AddBookmarkInput from '@/components/bookmark/add-input'
 import DashboardHeader from '@/components/dashboard/dashboard-header'
 
-// import AddBookmarkInput from 'components/bookmark/add-input'
 // import CardList from 'components/card-list'
 // import Header from 'components/header'
 // import { EmptyBookmarkState } from 'components/icons'
@@ -17,10 +17,10 @@ export default async function Page() {
   return (
     <>
       <DashboardHeader />
-      {/* <AddBookmarkInput className='px-3' btnClassname='relative top-3' />
+      <AddBookmarkInput className='px-3' btnClassname='relative top-3' />
       <div className='h-full sm:border-r border-border pb-24'>
-        {bookmarks.length ? <CardList bookmarks={bookmarks} tags={tags} /> : <EmptyBookmarkState />}
-      </div> */}
+        {/* {bookmarks.length ? <CardList bookmarks={bookmarks} tags={tags} /> : <EmptyBookmarkState />} */}
+      </div>
     </>
   )
 }
