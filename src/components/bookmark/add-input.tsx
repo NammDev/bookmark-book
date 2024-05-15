@@ -8,7 +8,6 @@ import Loader, { UploadIcon } from '@/components/icons'
 import { Input } from '@/components/ui/input'
 
 // server
-// import { getOg } from 'app/actions/og'
 // import { incrementBookmarkUsage } from 'app/actions/user'
 // import { createBookmark } from 'app/actions/bookmarks'
 
@@ -22,6 +21,10 @@ import { useUser } from '../layouts/user-provider'
 
 // tags
 import { MetaTags } from '@/types/data'
+import { getOg } from '@/lib/actions/og'
+import { BookmarkInsertSchemaType } from '@/lib/validations/bookmark'
+import { createBookmark } from '@/lib/actions/bookmarks'
+import { incrementBookmarkUsage } from '@/lib/actions/users'
 
 type AddBookmarkInputProps = {
   className?: string
@@ -49,18 +52,19 @@ export default function AddBookmarkInput({
         return
       }
       setLoading(true)
-      // const ogData: MetaTags = await getOg(inputUrl)
-      // const payload: any = {
-      //   url: inputUrl,
-      //   description: ogData.description?.trim(),
-      //   title: ogData.title?.trim(),
-      //   metadata: {
-      //     is_fallback: ogData.is_fallback,
-      //     image: ogData.image,
-      //   },
-      // }
-      // await incrementBookmarkUsage()
-      // await createBookmark(payload)
+      const ogData: MetaTags = await getOg(inputUrl)
+      const payload: BookmarkInsertSchemaType = {
+        url: inputUrl,
+        description: ogData.description?.trim(),
+        title: ogData.title?.trim(),
+        userId: user?.id,
+        metadata: {
+          isFallback: ogData.isFallback,
+          image: ogData.image,
+        },
+      }
+      await incrementBookmarkUsage()
+      await createBookmark(payload)
       toast.success(`Bookmark added.`)
       setUrl('')
     } catch (error) {

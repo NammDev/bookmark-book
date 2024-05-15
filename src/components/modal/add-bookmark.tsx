@@ -7,8 +7,7 @@ type AddBookmarkProps = {
   onHide: (open: boolean) => void
 }
 
-export default async function AddBookmark({ open, onHide }: AddBookmarkProps) {
-  const user = await getCachedUser()
+export default function AddBookmark({ open, onHide }: AddBookmarkProps) {
   return (
     <Dialog open={open} onOpenChange={() => onHide(false)}>
       <DialogContent className='sm:max-w-md py-2 pb-0 px-2 !top-[30%] max-w-[calc(100%-6px)]'>

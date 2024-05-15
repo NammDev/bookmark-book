@@ -2,10 +2,11 @@
 
 import { cache } from 'react'
 import { unstable_noStore as noStore, revalidateTag } from 'next/cache'
-import { currentUser } from '@clerk/nextjs/server'
+import { User as AuthUser, currentUser } from '@clerk/nextjs/server'
 import { db } from '../db'
 import { getUserEmail } from '../utils'
-import { User } from '@prisma/client'
+import { UserModified } from '@/types/data'
+import { NextResponse } from 'next/server'
 
 export const getCachedUser = cache(async () => {
   noStore()
@@ -33,11 +34,12 @@ export const getCachedAuthUser = cache(async () => {
 })
 
 export async function getUser(userId: string) {
-  return db.user.findUnique({
+  const user = await db.user.findUnique({
     where: {
       id: userId,
     },
   })
+  return user as UserModified | null
 }
 
 export async function createUser() {
@@ -54,6 +56,21 @@ export async function createUser() {
   })
 }
 
+export const checkAuth = async (
+  callback: (authUser: AuthUser, user: UserModified) => Promise<Response | undefined>
+) => {
+  const authUser = await currentUser()
+  const user = await getUser(authUser?.id as string)
+
+  if (!authUser || !user) {
+    return NextResponse.json({ message: 'Unauthorized request' }, { status: 401 })
+  }
+
+  if (authUser) {
+    return callback(authUser, user)
+  }
+}
+
 export const setWelcomePageAsVisited = async () => {
   const userAuth = await getCachedAuthUser()
   try {
@@ -64,4 +81,20 @@ export const setWelcomePageAsVisited = async () => {
   } catch {
     throw new Error("User hasn't been welcomed")
   }
+}
+
+export const incrementBookmarkUsage = async (count: number = 1) => {
+  const user = await getCachedAuthUser()
+  if (!user) return new Error('Unable to increment usage.')
+
+  return await db.user.update({
+    where: { id: user.id },
+    data: {
+      usage: {
+        bookmark: {
+          increment: count,
+        },
+      },
+    },
+  })
 }
