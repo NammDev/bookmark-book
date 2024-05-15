@@ -3,7 +3,8 @@
 import { revalidateTag } from 'next/cache'
 import { BookmarkInsertSchemaType } from '../validations/bookmark'
 import { db } from '../db'
-import { getCachedUser } from './users'
+import { getCachedUser, incrementFavUsage } from './users'
+import { Bookmark } from '@prisma/client'
 
 export const createBookmark = async (bookmark: BookmarkInsertSchemaType) => {
   try {
@@ -13,7 +14,7 @@ export const createBookmark = async (bookmark: BookmarkInsertSchemaType) => {
         metadata: bookmark.metadata as NullableJsonNullValueInput | InputJsonValue | undefined,
       },
     })
-    revalidateTag(`subscriptions`)
+    revalidateTag(`bookmark`)
     return newBookmark
   } catch (error) {
     return new Error('Unable to create a new bookmark.')
@@ -73,6 +74,34 @@ export const getFavBookmarks = async () => {
   })
 }
 
+export const addToFav = async (id: Bookmark['id'], isFav: Bookmark['isFav']) => {
+  const user = await getCachedUser()
+  if (!user) return new Error('User is not authenticated.')
+
+  try {
+    if (isFav) {
+      await incrementFavUsage()
+    } else {
+      await incrementFavUsage(-1)
+    }
+
+    const newBookmark = await db.bookmark.update({
+      where: {
+        id: id,
+        userId: user.id,
+      },
+      data: {
+        isFav: isFav,
+      },
+    })
+
+    revalidateTag(`bookmark`)
+    return newBookmark
+  } catch (error) {
+    return new Error('Unable to add to fav.')
+  }
+}
+
 // export const updateBookmark = async (id: Bookmark['id'], bookmark: BookmarkUpdate) => {
 //   const user = await getAuthUser()
 //   if (!user) {
@@ -117,30 +146,6 @@ export const getFavBookmarks = async () => {
 //     return new Error('Unable to delete the bookmark.')
 //   }
 
-//   revalidateTag('supabase')
-// }
-
-// export const addToFav = async (id: Bookmark['id'], isFav: Bookmark['is_fav']) => {
-//   const user = await getAuthUser()
-//   if (!user) {
-//     return new Error('User is not authenticated.')
-//   }
-
-//   if (isFav) {
-//     await incrementFavUsage()
-//   } else {
-//     await incrementFavUsage(-1)
-//   }
-//   const supabase = await createClient()
-//   const { error } = await supabase
-//     .from('bookmarks')
-//     .update({ is_fav: isFav })
-//     .eq('id', id)
-//     .eq('user_id', user.id)
-
-//   if (error) {
-//     return new Error('Unable to add to fav.')
-//   }
 //   revalidateTag('supabase')
 // }
 

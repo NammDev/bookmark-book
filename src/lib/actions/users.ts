@@ -84,16 +84,34 @@ export const setWelcomePageAsVisited = async () => {
 }
 
 export const incrementBookmarkUsage = async (count: number = 1) => {
-  const user = await getCachedAuthUser()
+  const user = await getCachedUser()
   if (!user) return new Error('Unable to increment usage.')
+
+  const usage = JSON.parse(JSON.stringify(user.usage))
 
   return await db.user.update({
     where: { id: user.id },
     data: {
       usage: {
-        bookmark: {
-          bookmarks: count,
-        },
+        ...usage,
+        bookmarks: usage.bookmarks + count,
+      },
+    },
+  })
+}
+
+export const incrementFavUsage = async (count: number = 1) => {
+  const user = await getCachedUser()
+  if (!user) return new Error('Unable to increment usage.')
+
+  const usage = JSON.parse(JSON.stringify(user.usage))
+
+  return await db.user.update({
+    where: { id: user.id },
+    data: {
+      usage: {
+        ...usage,
+        favorites: usage.favorites + count,
       },
     },
   })

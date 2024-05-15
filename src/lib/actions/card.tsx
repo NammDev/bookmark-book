@@ -2,7 +2,6 @@
 
 import { startTransition, useOptimistic } from 'react'
 import { toast } from 'sonner'
-// import { addToFav } from 'app/actions/bookmarks'
 import { FavIcon } from '@/components/icons'
 import { cn } from '@/lib/utils'
 
@@ -11,6 +10,7 @@ import TagBadge from '../../components/card/tag-badge'
 import { BookmarkModified } from '@/types/data'
 import { Tag } from '@prisma/client'
 import { useUser } from '@/components/layouts/user-provider'
+import { addToFav } from './bookmarks'
 
 function FavButtonIcon({ is_fav }: { is_fav: BookmarkModified['isFav'] }) {
   const isFav = Boolean(is_fav)
@@ -62,7 +62,7 @@ export default function CardActions({ data, tags }: CardActionsType) {
                 isFav: !optimisticData.isFav,
               })
             )
-            // await addToFav(optimisticData.id, !optimisticData.is_fav)
+            await addToFav(optimisticData.id, !optimisticData.isFav)
           }}
         >
           <FavButtonIcon is_fav={optimisticData.isFav} />
