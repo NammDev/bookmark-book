@@ -18,40 +18,48 @@ model User {
   previewImage          Boolean    @default(false)
   uploadCount           Int        @default(0)
   shareCount            Int        @default(0)
-  usage                 Json       @default("{\"bookmarks\": 0, \"tags\": 0, \"favorites\": 0, \"sessions\": 0}")
+  usage                 Json       @default("{\"tags\": 0, \"sessions\": 0, \"bookmarks\": 0, \"favorites\": 0}")
   planStatus            String     @default("free")
   billingCycleStartDate DateTime   @default(now())
-  orderInfo             Json       @default("{\"status\": \"\", \"number\": 0, \"store_id\": 0, \"identifier\":\"\"}")
+  orderInfo             Json       @default("{\"number\": 0, \"status\": \"\", \"store_id\": 0, \"identifier\": \"\"}")
+  createdAt             DateTime   @default(now())
+  updatedAt             DateTime   @updatedAt @db.Timestamp(6)
   Bookmarks             Bookmark[]
   Tag                   Tag[]
 }
 
 model Bookmark {
   id           Int           @id @default(autoincrement())
+  userId       String
   title        String
   url          String
   description  String?
   metadata     Json?
   isFav        Boolean       @default(false)
   previewImage Boolean       @default(true)
-  userId       String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt @db.Timestamp(6)
   User         User          @relation(fields: [userId], references: [id])
   BookmarkTag  BookmarkTag[]
 }
 
 model Tag {
   id          Int           @id @default(autoincrement())
-  name        String
   userId      String
+  name        String
   shared      Boolean       @default(false)
   sharedHash  String?
-  User        User          @relation(fields: [userId], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt @db.Timestamp(6)
   BookmarkTag BookmarkTag[]
+  User        User          @relation(fields: [userId], references: [id])
 }
 
 model BookmarkTag {
   bookmarkId Int
   tagId      Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt @db.Timestamp(6)
   Bookmark   Bookmark @relation(fields: [bookmarkId], references: [id])
   Tag        Tag      @relation(fields: [tagId], references: [id])
 

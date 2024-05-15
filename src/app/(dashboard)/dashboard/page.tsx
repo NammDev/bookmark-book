@@ -3,6 +3,7 @@
 
 import AddBookmarkInput from '@/components/bookmark/add-input'
 import DashboardHeader from '@/components/dashboard/dashboard-header'
+import { getBookmarks } from '@/lib/actions/bookmarks'
 
 // import CardList from 'components/card-list'
 // import Header from 'components/header'
@@ -13,7 +14,6 @@ export const revalidate = 3600
 export default async function Page() {
   // const [bookmarks, tags] = await Promise.all([await getBookmarks(), await getTags()])
 
-  // await new Promise((resolve) => setTimeout(resolve, 3000))
   return (
     <>
       <DashboardHeader />

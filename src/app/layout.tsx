@@ -10,8 +10,6 @@ import { Toaster } from '@/components/ui/sonner'
 import NextTopLoader from 'nextjs-toploader'
 import { UserProvider } from '@/components/layouts/user-provider'
 import { getCachedUser } from '@/lib/actions/users'
-import { permanentRedirect } from 'next/navigation'
-import { urls } from '@/config/urls'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
 
@@ -79,9 +77,6 @@ export const viewport: Viewport = {
 // const GOOGLE_ANALYTICS_ID = process.env.GA4_ANALYTICS_ID
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const user = await getCachedUser()
-  if (!user) permanentRedirect(urls.account)
-
   return (
     <ClerkProvider>
       <html lang='en' className='h-full' suppressHydrationWarning>
@@ -93,9 +88,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             enableSystem
             disableTransitionOnChange
           >
-            <UserProvider user={user}>
-              <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
-            </UserProvider>
+            <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
           </ThemeProvider>
           <Toaster
             expand

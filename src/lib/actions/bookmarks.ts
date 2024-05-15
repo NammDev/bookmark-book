@@ -3,6 +3,7 @@
 import { revalidateTag } from 'next/cache'
 import { BookmarkInsertSchemaType } from '../validations/bookmark'
 import { db } from '../db'
+import { getCachedUser } from './users'
 
 export const createBookmark = async (bookmark: BookmarkInsertSchemaType) => {
   try {
@@ -19,26 +20,33 @@ export const createBookmark = async (bookmark: BookmarkInsertSchemaType) => {
   }
 }
 
-// export const getBookmarks = async () => {
-//   const user = await getAuthUser()
-//   if (!user) {
-//     return []
-//   }
+export const getBookmarks = async () => {
+  const user = await getCachedUser()
+  if (!user) return []
 
-//   const supabase = await createClient()
-//   const { data, error } = await supabase
-//     .from('bookmarks')
-//     .select(`*, bookmarks_tags (tags!inner (id,name))`)
-//     .eq('user_id', user.id)
-//     .order('created_at', { ascending: false })
-//     .returns<BookmarkModified[]>()
+  const bookmarks = await db.bookmark.findMany({
+    where: {
+      userId: user.id,
+    },
+    include: {
+      BookmarkTag: {
+        select: {
+          Tag: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  })
 
-//   if (error) {
-//     return []
-//   }
-
-//   return data
-// }
+  return bookmarks
+}
 
 // export const updateBookmark = async (id: Bookmark['id'], bookmark: BookmarkUpdate) => {
 //   const user = await getAuthUser()
