@@ -8,7 +8,7 @@ import { Tag } from '@prisma/client'
 
 type CardListProps = {
   bookmarks: BookmarkModified[]
-  tags: Omit<Tag, 'userId'>[]
+  tags: Tag[]
 }
 
 export default function CardList({ bookmarks, tags }: CardListProps) {

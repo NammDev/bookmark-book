@@ -10,7 +10,7 @@ import { Tag } from '@prisma/client'
 
 type CardProps = {
   data: BookmarkModified
-  tags: Omit<Tag, 'userId'>[]
+  tags: Tag[]
   className?: string
 }
 

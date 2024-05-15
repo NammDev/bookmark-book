@@ -1,16 +1,14 @@
 import { useState } from 'react'
-
 import { TagsIcon } from '@/components/icons'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
 import { BookmarkModified } from '@/types/data'
-
-// import TagList from './tag-list'
+import TagList from './tag-list'
 import { Tag } from '@prisma/client'
 
 type AddTagProps = {
   data: BookmarkModified
-  tags: Omit<Tag, 'userId'>[]
+  tags: Tag[]
 }
 
 export default function AddTag({ data, tags }: AddTagProps) {
@@ -33,7 +31,7 @@ export default function AddTag({ data, tags }: AddTagProps) {
         </button>
       </PopoverTrigger>
       <PopoverContent className='w-52 bg-background rounded-lg shadow-2xl p-0'>
-        {/* <TagList tags={tags} data={data} /> */}
+        <TagList tags={tags} data={data} />
       </PopoverContent>
     </Popover>
   )

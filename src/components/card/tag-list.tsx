@@ -7,7 +7,6 @@ import { toast } from 'sonner'
 // server
 // import { addTagToBookmark, createTag } from 'app/actions/tags'
 // import { incrementTagUsage } from 'app/actions/user'
-import { PublicIconWithTooltip } from 'components/public-icon-with-tooltip'
 
 import { CheckIcon } from '@/components/icons'
 import {
@@ -21,7 +20,11 @@ import {
 import { isBeforeTwoDay } from '@/lib/date'
 import { cn } from '@/lib/utils'
 
-import { BookmarkModified, Tag, TagInsert } from '@/types/data'
+import { BookmarkModified } from '@/types/data'
+import { Tag } from '@prisma/client'
+import { useUser } from '../layouts/user-provider'
+import { TagInsertType } from '@/lib/validations/tag'
+import { PublicIconWithTooltip } from './public-icon-with-tooltip'
 
 type TagListProps = {
   data: BookmarkModified
@@ -41,7 +44,7 @@ export default function TagList({ data, tags }: TagListProps) {
   const onCreate = async () => {
     const payload = {
       name: searchText,
-    } as TagInsert
+    } as TagInsertType
 
     try {
       if (user?.usage.tags >= currentPlan.limit.tags) {
@@ -54,12 +57,12 @@ export default function TagList({ data, tags }: TagListProps) {
           (prev) =>
             ({
               ...prev,
-              bookmarks_tags: [...prev.bookmarks_tags, { tags: { ...payload } }],
+              BookmarkTag: [...prev.BookmarkTag, { tags: { ...payload } }],
             } as BookmarkModified)
         )
       )
-      await incrementTagUsage()
-      await createTag(data.id, payload)
+      // await incrementTagUsage()
+      // await createTag(data.id, payload)
       toast.success('Tag is added to bookmark.')
       setSearchText('')
     } catch (error) {
@@ -68,9 +71,7 @@ export default function TagList({ data, tags }: TagListProps) {
           (prev) =>
             ({
               ...prev,
-              bookmarks_tags: prev.bookmarks_tags.filter(
-                ({ tags: { name } }) => name !== payload.name
-              ),
+              BookmarkTag: prev.BookmarkTag.filter(({ Tag: { name } }) => name !== payload.name),
             } as BookmarkModified)
         )
       )
@@ -89,7 +90,7 @@ export default function TagList({ data, tags }: TagListProps) {
             (prev) =>
               ({
                 ...prev,
-                bookmarks_tags: prev.bookmarks_tags.filter(({ tags: { id } }) => id !== tag.id),
+                BookmarkTag: prev.BookmarkTag.filter(({ Tag: { id } }) => id !== tag.id),
               } as BookmarkModified)
           )
         )
@@ -99,12 +100,12 @@ export default function TagList({ data, tags }: TagListProps) {
             (prev) =>
               ({
                 ...prev,
-                bookmarks_tags: [...prev.bookmarks_tags, { tags: { ...tag } }],
+                BookmarkTag: [...prev.BookmarkTag, { Tag: { ...tag } }],
               } as BookmarkModified)
           )
         )
       }
-      await addTagToBookmark(data.id, tag.id, isChecked)
+      // await addTagToBookmark(data.id, tag.id, isChecked)
     } catch {
       toast.error(`Unable to add/remove a tag. Try again.`)
       if (isChecked) {
@@ -113,7 +114,7 @@ export default function TagList({ data, tags }: TagListProps) {
             (prev) =>
               ({
                 ...prev,
-                bookmarks_tags: [...prev.bookmarks_tags, { tags: { ...tag } }],
+                BookmarkTag: [...prev.BookmarkTag, { Tag: { ...tag } }],
               } as BookmarkModified)
           )
         )
@@ -123,7 +124,7 @@ export default function TagList({ data, tags }: TagListProps) {
             (prev) =>
               ({
                 ...prev,
-                bookmarks_tags: prev.bookmarks_tags.filter(({ tags: { id } }) => id !== tag.id),
+                BookmarkTag: prev.BookmarkTag.filter(({ Tag: { id } }) => id !== tag.id),
               } as BookmarkModified)
           )
         )
@@ -136,7 +137,7 @@ export default function TagList({ data, tags }: TagListProps) {
   const recentTagsMap = tags
     .filter(
       (tag: Tag) =>
-        isBeforeTwoDay(new Date(tag.created_at)) || isBeforeTwoDay(new Date(tag.updated_at))
+        isBeforeTwoDay(new Date(tag.createdAt)) || isBeforeTwoDay(new Date(tag.updatedAt))
     )
     .slice(0, 2)
     .reduce((acc, tag) => {
@@ -147,7 +148,7 @@ export default function TagList({ data, tags }: TagListProps) {
     }, {} as Record<string, Tag>)
 
   const recentTags = Object.values(recentTagsMap).sort(
-    (a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
   )
 
   const otherTags = tags.filter((tag: Tag) => !recentTagsMap[tag.id])
@@ -165,7 +166,7 @@ export default function TagList({ data, tags }: TagListProps) {
           <CommandGroup heading='Recent tags'>
             {recentTags.map((tag: Tag) => {
               const isChecked = Boolean(
-                optimisticData?.bookmarks_tags?.find(({ tags: { id } }) => id == tag.id)
+                optimisticData?.BookmarkTag?.find(({ Tag: { id } }) => id == tag.id)
               )
               return (
                 <CommandItem
@@ -209,7 +210,7 @@ export default function TagList({ data, tags }: TagListProps) {
           <CommandGroup heading='All tags'>
             {otherTags.map((tag: Tag) => {
               const isChecked = Boolean(
-                optimisticData?.bookmarks_tags?.find(({ tags: { id } }) => id == tag.id)
+                optimisticData?.BookmarkTag?.find(({ Tag: { id } }) => id == tag.id)
               )
               return (
                 <CommandItem

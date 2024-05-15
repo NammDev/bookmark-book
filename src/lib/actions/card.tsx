@@ -4,7 +4,6 @@ import { startTransition, useOptimistic } from 'react'
 import { toast } from 'sonner'
 import { FavIcon } from '@/components/icons'
 import { cn } from '@/lib/utils'
-
 import AddTag from '../../components/card/add-tag'
 import TagBadge from '../../components/card/tag-badge'
 import { BookmarkModified } from '@/types/data'
@@ -35,7 +34,7 @@ function FavButtonIcon({ is_fav }: { is_fav: BookmarkModified['isFav'] }) {
 
 type CardActionsType = {
   data: BookmarkModified
-  tags: Omit<Tag, 'userId'>[]
+  tags: Tag[]
 }
 
 export default function CardActions({ data, tags }: CardActionsType) {

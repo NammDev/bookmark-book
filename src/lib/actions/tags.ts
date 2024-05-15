@@ -20,6 +20,7 @@ export const getTags = async () => {
       userId: user.id,
     },
     select: {
+      userId: true,
       id: true,
       name: true,
       shared: true,
