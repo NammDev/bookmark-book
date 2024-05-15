@@ -17,7 +17,7 @@ export default function Sidebar() {
           <Logo className='w-[38px] h-[38px] group-active:scale-95 duration-150 transition-transform' />
           <span className='sr-only'>Home page</span>
         </Link>
-        <NavLink Icon={(props: any) => <HomeIcon {...props} />} href={'/'} title='Home' />
+        <NavLink Icon={(props: any) => <HomeIcon {...props} />} href={'/dashboard'} title='Home' />
         {/* <SearchIcon /> */}
         <NavLink
           Icon={(props: any) => <FavIcon {...props} />}
