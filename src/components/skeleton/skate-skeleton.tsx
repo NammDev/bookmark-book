@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton'
 
-export default function CardSkeleton({ className = '' }: { className?: string }) {
+export default function CardSkeletonSkate({ className = '' }: { className?: string }) {
   return (
     <div
       className={`flex h-[74px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring justify-between  p-3 px-4 rounded-xl border border-input ${className}`}

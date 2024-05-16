@@ -10,17 +10,13 @@ import { NextResponse } from 'next/server'
 
 export const getCachedUser = cache(async () => {
   noStore()
-  try {
-    const user = await currentUser()
-    if (!user) {
-      return null
-    }
-    return db.user.findUnique({
-      where: { id: user.id },
-    })
-  } catch {
+  const user = await currentUser()
+  if (!user) {
     return null
   }
+  return db.user.findUnique({
+    where: { id: user.id },
+  })
 })
 
 export const getCachedAuthUser = cache(async () => {
