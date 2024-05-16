@@ -1,7 +1,11 @@
 'use server'
 
 import { revalidateTag } from 'next/cache'
-import { BookmarkInsertSchemaType, BookmarkRefreshSchemaType } from '../validations/bookmark'
+import {
+  BookmarkInsertSchemaType,
+  BookmarkRefreshSchemaType,
+  BookmarkUpdateSchemaType,
+} from '../validations/bookmark'
 import { db } from '../db'
 import { getCachedAuthUser, getCachedUser, incrementFavUsage } from './users'
 import { Bookmark } from '@prisma/client'
@@ -136,25 +140,25 @@ export const getBookmarksForTag = async (slug: string) => {
   })
 }
 
-// export const updateBookmark = async (id: Bookmark['id'], bookmark: BookmarkUpdate) => {
-//   const user = await getAuthUser()
-//   if (!user) {
-//     return new Error('User is not authenticated.')
-//   }
-//   const supabase = await createClient()
-//   const { error } = await supabase
-//     .from('bookmarks')
-//     .update({
-//       ...bookmark,
-//       user_id: user.id,
-//     })
-//     .eq('id', id)
+export const updateBookmark = async (id: Bookmark['id'], bookmark: BookmarkUpdateSchemaType) => {
+  const user = await getCachedAuthUser()
+  if (!user) return []
 
-//   if (error) {
-//     return new Error('Unable to update bookmark.')
-//   }
-//   revalidateTag('supabase')
-// }
+  try {
+    const newBookmark = await db.bookmark.update({
+      where: { id, userId: user.id },
+      data: {
+        ...bookmark,
+        //@ts-ignore
+        metadata: bookmark.metadata,
+      },
+    })
+    revalidateTag(`bookmark`)
+    return newBookmark
+  } catch (error) {
+    return new Error('Unable to update bookmark.')
+  }
+}
 
 export const deleteBookmark = async (id: Bookmark['id']) => {
   const user = await getCachedAuthUser()

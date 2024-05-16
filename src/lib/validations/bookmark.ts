@@ -20,3 +20,12 @@ const BookmarkRefreshSchema = z.object({
 })
 
 export type BookmarkRefreshSchemaType = z.infer<typeof BookmarkRefreshSchema>
+
+const BookmarkUpdateSchema = z.object({
+  url: z.string().optional(),
+  title: z.string().optional(),
+  description: z.string().nullable().optional(),
+  metadata: z.unknown().optional(),
+})
+
+export type BookmarkUpdateSchemaType = z.infer<typeof BookmarkUpdateSchema>

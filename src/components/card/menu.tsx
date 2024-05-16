@@ -24,6 +24,7 @@ import { addToFav, deleteBookmark, refreshBookmark } from '@/lib/actions/bookmar
 import { incrementBookmarkUsage, incrementFavUsage } from '@/lib/actions/users'
 import { getOg } from '@/lib/actions/og'
 import { BookmarkRefreshSchemaType } from '@/lib/validations/bookmark'
+import EditBookmark from '../modal/edit-bookmark'
 
 type CardMenuProps = {
   data: BookmarkModified
@@ -211,7 +212,7 @@ export default function CardMenu({ data, className, onDone, isSearch }: CardMenu
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {/* {open ? <EditBookmark onDone={onDone} data={data} open={open} setOpen={setOpen} /> : null} */}
+      {open ? <EditBookmark onDone={onDone} data={data} open={open} setOpen={setOpen} /> : null}
     </>
   )
 }
