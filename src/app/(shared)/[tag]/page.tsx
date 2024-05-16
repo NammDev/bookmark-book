@@ -48,7 +48,6 @@ export default async function Page({ params }: { params: { tag: string } }) {
         ) : (
           <EmptyBookmarkSharedState />
         )}
-        <h1>Hello {tag}</h1>
       </div>
     </>
   )
