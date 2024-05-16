@@ -10,7 +10,8 @@ import { tweetIds } from '@/config/tweetIds'
 export default async function Page() {
   return (
     <>
-      <div className='mx-auto max-sm:mt-32 mt-32'>
+      <h1>Test</h1>
+      {/* <div className='mx-auto max-sm:mt-32 mt-32'>
         <h2 className='lg:text-6xl md:text-5xl text-4xl text-primary font-black max-w-2xl text-center mx-auto tracking-tight py-4 pb-1'>
           Bookmark manager
           <br />
@@ -65,7 +66,7 @@ export default async function Page() {
           Our source code is available on GitHub - feel free to read, review, or contribute to it.
         </p>
         <GitButton />
-      </div>
+      </div> */}
     </>
   )
 }

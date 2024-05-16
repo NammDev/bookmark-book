@@ -82,7 +82,7 @@ export default function Pricing() {
               </div>
               <div className='mt-6 mb-2'>
                 <Link
-                  href={urls.account}
+                  href={'/dashboard'}
                   className='w-full group/free font-normal hover:bg-primary/90 rounded-xl flex text-lg items-center justify-center bg-primary text-white p-2 px-6'
                 >
                   Choose Free{' '}
@@ -147,7 +147,7 @@ export default function Pricing() {
               </div>
               <div className='mt-6 mb-2'>
                 <Link
-                  href={urls.settings}
+                  href={'/dashboard/settings'}
                   className='w-full group/pro font-normal hover:bg-blue-600/90 rounded-xl flex text-lg items-center justify-center bg-blue-600 text-white p-2 px-6'
                 >
                   Choose Pro{' '}
