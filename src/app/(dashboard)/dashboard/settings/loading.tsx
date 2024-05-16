@@ -10,6 +10,8 @@ export default function Loading() {
           <h2 className='font-medium mb-2'>General</h2>
           <div className='flex flex-col gap-6'>
             <SettingSkeleton />
+            <SettingSkeleton />
+            <SettingSkeleton />
           </div>
         </div>
       </div>
