@@ -29,10 +29,11 @@ export default async function Page({ params }: { params: { tag: string } }) {
   const { tag } = params
   const hash = decodeURIComponent(tag)
   const tagShared = await getSharedTag(hash)
+  if (!tagShared) return notFound()
+
   const bookmarks = await getBookmarksForTag(tagShared.name)
-  if (!bookmarks) {
-    return notFound
-  }
+  if (!bookmarks) return notFound
+
   const data = groupByDate(bookmarks)
 
   return (
