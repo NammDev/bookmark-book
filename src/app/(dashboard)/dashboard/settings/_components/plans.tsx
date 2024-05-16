@@ -24,7 +24,7 @@ import { cn } from '@/lib/utils'
 import PlanTooltip from './plan-tooltip'
 import PlanUpgradeButton from './plan-upgrade'
 import SettingsCard from './settings-card'
-import { getCachedAuthUser, getCachedUser, getUser } from '@/lib/actions/users'
+import { getCachedAuthUser, getUser } from '@/lib/actions/users'
 
 export default async function Plans() {
   const authUser = await getCachedAuthUser()

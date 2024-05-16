@@ -9,6 +9,7 @@ import { toast } from 'sonner'
 
 import { formatDate } from '@/lib/date'
 import { PaymentType, UserModified } from '@/types/data'
+import PaymentModal from '@/components/modal/payment'
 
 declare global {
   interface Window {
@@ -87,7 +88,7 @@ export default function PlanUpgradeButton() {
   }
 
   const onClick = (type: PaymentType) => {
-    window.LemonSqueezy?.Url?.Open?.(type === 'monthly' ? checkoutMonthlyUrl : checkoutYearlyUrl)
+    // window.LemonSqueezy?.Url?.Open?.(type === 'monthly' ? checkoutMonthlyUrl : checkoutYearlyUrl)
   }
 
   return (
@@ -100,7 +101,7 @@ export default function PlanUpgradeButton() {
       </button>
 
       <Script src='https://app.lemonsqueezy.com/js/lemon.js' async onLoad={setupLemonSqueezy} />
-      {/* {open ? <PaymentModal open={open} onHide={setOpen} onClick={onClick} /> : null} */}
+      {open ? <PaymentModal open={open} onHide={setOpen} onClick={onClick} /> : null}
     </>
   )
 }
