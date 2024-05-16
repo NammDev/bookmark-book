@@ -28,7 +28,7 @@ export default function SharePopover({ tag, children, className }: SharePopoverP
 
   if (!tag) return null
 
-  let url = `${urls.home}/${encodeURIComponent(randomHash ?? tag.name)}`
+  let url = `${urls.home}/shared/${encodeURIComponent(randomHash ?? tag.name)}`
 
   const generateSharableUrl = async () => {
     try {
