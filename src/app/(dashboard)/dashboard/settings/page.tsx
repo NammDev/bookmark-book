@@ -3,7 +3,7 @@ import SettingsAccount from './_components/account'
 import Appearance from './_components/appearance'
 import Plans from './_components/plans'
 import ExportBookmarks from './_components/export-bookmarks'
-import DeleteAccount from './delete-account'
+import DeleteAccount from './_components/delete-account'
 
 const title = 'Bookmark it. | Settings'
 const description =

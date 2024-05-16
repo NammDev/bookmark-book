@@ -5,9 +5,10 @@ import { urls } from '@/config/urls'
 import { toast } from 'sonner'
 import { DeleteIcon } from '@/components/icons'
 import { useUser } from '@clerk/nextjs'
-import SettingsCard from './_components/settings-card'
+import SettingsCard from './settings-card'
 import { Skeleton } from '@/components/ui/skeleton'
-// import DeleteAccountModal from 'components/modal/delete-account'
+import DeleteAccountModal from '@/components/modal/delete-account'
+import { getUserEmail } from '@/lib/utils'
 // import { refreshInChromeExt } from 'lib/chrome-extension'
 
 export default function DeleteAccount() {
@@ -15,19 +16,22 @@ export default function DeleteAccount() {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
 
+  const email =
+    user?.emailAddresses?.find((e) => e.id === user.primaryEmailAddressId)?.emailAddress ?? ''
+
   const onSubmit = async (email: string) => {
     try {
       setLoading(true)
-      const response = await fetch('/api/account/delete', {
-        method: 'POST',
-        body: JSON.stringify({ email }),
-      })
-      if (!response.ok) {
-        throw new Error('Unable to delete your account, try again.')
-      }
+      console.log(email)
+      // const response = await fetch('/api/account/delete', {
+      //   method: 'POST',
+      //   body: JSON.stringify({ email }),
+      // })
+      // if (!response.ok) {
+      //   throw new Error('Unable to delete your account, try again.')
+      // }
       // refreshInChromeExt()
       // await supabase.auth.signOut()
-      window.location.href = urls.account
     } catch {
       toast.error('Unable to delete your account, try again.')
     } finally {
@@ -59,15 +63,15 @@ export default function DeleteAccount() {
             <DeleteIcon className='w-3.5 h-3.5 mr-1.5' /> Delete
           </button>
         ) : null}
-        {/* {open ? (
+        {open ? (
           <DeleteAccountModal
             loading={loading}
             open={true}
             setOpen={setOpen}
-            emailId={authUser.user_metadata?.email}
+            emailId={email}
             onSubmit={onSubmit}
           />
-        ) : null} */}
+        ) : null}
       </div>
     </SettingsCard>
   )
