@@ -1,29 +1,21 @@
 'use server'
 
 import { revalidateTag } from 'next/cache'
-import { notFound } from 'next/navigation'
-import { urls } from '@/config/urls'
 import { nanoid } from '@/lib/share'
 import { Tag } from '@prisma/client'
 import { db } from '../db'
 import { getCachedAuthUser, incrementShareCount } from './users'
 import { TagInsertType } from '../validations/tag'
+import { getBookmarksForTag } from './bookmarks'
 
-// export const getSharedBookmarks = async (hash: string) => {
-//   const data = await fetch(`${urls.nonAppApi}/shared/bookmarks?hash=${encodeURIComponent(hash)}`, {
-//     cache: 'no-cache',
-//   })
-//   if (data.status === 429) {
-//     throw new Error('ratelimitexceeded')
-//   }
-//   if (data.status === 404) {
-//     notFound()
-//   }
-//   if (!data.ok) {
-//     return [] as BookmarkModified[]
-//   }
-//   return (await data.json()) as BookmarkModified[]
-// }
+export const getSharedTag = async (hash: string) => {
+  const tagDataResult = await db.tag.findFirst({
+    where: { sharedHash: hash, shared: true },
+  })
+  if (!tagDataResult) throw new Error('Failed to fetch data')
+
+  return tagDataResult
+}
 
 export async function updateSharedTag(tag: Tag, shared: boolean) {
   const user = await getCachedAuthUser()
