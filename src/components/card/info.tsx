@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export default function CardInfo({ data }: { data: Bookmark }) {
   const url = new URL(data.url)
-  url.searchParams.append('utm_source', 'bmrk.cc')
+  url.searchParams.append('utm_source', 'nammdev')
   return (
     <Link
       title={data.title ?? ''}

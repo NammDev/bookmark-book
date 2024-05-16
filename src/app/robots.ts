@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: '/api/',
     },
-    sitemap: 'https://bmrk.cc/sitemap.xml',
+    sitemap: 'https://bookmarkx-c53b200cd6d8.herokuapp.com/sitemap.xml',
   }
 }

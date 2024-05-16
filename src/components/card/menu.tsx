@@ -102,7 +102,7 @@ export default function CardMenu({ data, className, onDone, isSearch }: CardMenu
   }
 
   const siteUrl = new URL(url)
-  siteUrl.searchParams.append('utm_source', 'bmrk.cc')
+  siteUrl.searchParams.append('utm_source', 'nammdev')
 
   const share = async () => {
     try {

@@ -35,7 +35,7 @@ const faqs = [
   },
   {
     question: 'I have more questions, how can I contact you?',
-    answer: `You can contact us through the app\'s "Help" link in profile menu or send us an email to "support@bmrk.cc".`,
+    answer: `You can contact us through the app\'s "Help" link in profile menu or send us an email to "namdeveloper.ca@gmail.com".`,
   },
 ]
 

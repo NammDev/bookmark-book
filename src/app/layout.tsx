@@ -15,7 +15,7 @@ const description =
   'Bookmark It. is an open-source bookmark manager to organize, discover and personalize your bookmarking experience.'
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://bmrk.cc'),
+  metadataBase: new URL('https://bookmarkx-c53b200cd6d8.herokuapp.com/'),
   title,
   description,
   twitter: {
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     siteName: 'Bookmark it.',
     title,
     description,
-    url: 'https://bmrk.cc',
+    url: 'https://bookmarkx-c53b200cd6d8.herokuapp.com/',
     images: [
       {
         type: 'image/jpeg',

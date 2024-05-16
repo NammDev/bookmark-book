@@ -13,7 +13,7 @@ import {
 } from './ui/dropdown-menu'
 import { useUser } from '@clerk/nextjs'
 
-const helpMailLink = 'mailto:support@bmrk.cc'
+const helpMailLink = 'mailto:namdeveloper.ca@gmail.com'
 
 export default function Profile({ className }: { className?: string }) {
   const { user: authUser } = useUser()
@@ -47,7 +47,7 @@ export default function Profile({ className }: { className?: string }) {
           <DropdownMenuItem
             className='flex items-center cursor-pointer'
             onClick={() => {
-              window.open(`https://github.com/gokulkrishh/bmrk.cc/issues/new/choose`, '_blank')
+              window.open(`https://github.com/NammDev/bookmark-book/issues/new/choose`, '_blank')
             }}
           >
             <BugIcon className='h-4 w-4 mr-2' /> File a bug

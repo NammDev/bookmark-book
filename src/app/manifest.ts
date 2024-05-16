@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    short_name: 'bmrk it.',
+    short_name: 'Bookmark X',
     name: 'Bookmark It',
     description:
       'Bookmark It. is an open-source bookmark manager to organize, discover and personalize your bookmarking experience',
