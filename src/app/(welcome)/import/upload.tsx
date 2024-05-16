@@ -1,6 +1,6 @@
 'use client'
 
-import UploadForm from 'components/form/upload'
+import UploadForm from '@/components/upload-form'
 
 export default function UploadBookmarks() {
   return (

@@ -12,12 +12,10 @@ import { MetaTags } from '@/types/data'
 import { getOg } from '@/lib/actions/og'
 import { BookmarkInsertSchemaType } from '@/lib/validations/bookmark'
 import { useUser } from '../layouts/user-provider'
+import UploadModal from '../modal/upload'
 
 // chrome extension
 // import { refreshInChromeExt } from 'lib/chrome-extension'
-
-// upload modal
-// import UploadModal from 'components/modal/upload'
 
 type AddBookmarkInputProps = {
   className?: string
@@ -139,7 +137,7 @@ export default function AddBookmarkInput({
         </div>
       </form>
 
-      {/* {open ? <UploadModal open={open} onHide={setOpen} /> : null} */}
+      {open ? <UploadModal open={open} onHide={setOpen} /> : null}
     </div>
   )
 }

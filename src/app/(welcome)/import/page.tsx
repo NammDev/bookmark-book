@@ -1,5 +1,5 @@
 import Link from 'next/link'
-// import UploadBookmarks from './upload'
+import UploadBookmarks from './upload'
 import { Logo } from '@/components/icons'
 import { setWelcomePageAsVisited } from '@/lib/actions/users'
 
@@ -28,7 +28,7 @@ export default async function Page() {
               Seamlessly import your existing bookmarks
             </p>
           </div>
-          {/* <UploadBookmarks /> */}
+          <UploadBookmarks />
           <Link
             href='/dashboard'
             className='items-center hover:text-primary active:text-primary underline text-muted-foreground mt-2 h-[40px] tracking-wide text-sm flex justify-center py-2 px-5 transition-colors'
