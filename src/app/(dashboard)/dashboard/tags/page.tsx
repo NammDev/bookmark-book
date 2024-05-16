@@ -1,0 +1,68 @@
+import Link from 'next/link'
+import { Badge } from '@/components/ui/badge'
+import DashboardHeader from '@/components/dashboard/dashboard-header'
+import { PublicIconWithTooltip } from '@/components/card/public-icon-with-tooltip'
+import EditTag from '@/components/tag/edit-tag'
+import DeleteTag from '@/components/tag/delete-tag'
+import CardList from '@/components/card-list'
+import { EmptyTagsState } from '@/components/icons'
+import { getBookmarks } from '@/lib/actions/bookmarks'
+import { getTags, getTagsWithBookmarkIds } from '@/lib/actions/tags'
+
+const title = 'Bookmark it. | Tags'
+const description =
+  'Bookmark It. is an open-source bookmark manager to organize, discover and personalize your bookmarking experience'
+
+export const metadata = {
+  title,
+  description,
+}
+
+export default async function Page() {
+  const [bookmarks, tags, groupedByTagId] = await Promise.all([
+    await getBookmarks(),
+    await getTags(),
+    await getTagsWithBookmarkIds(),
+  ])
+
+  return (
+    <>
+      <DashboardHeader headerText='Tags' />
+      <div className='min-h-dvh sm:border-r border-border pb-24'>
+        {tags.length ? (
+          <div className='flex flex-row gap-2 items-end px-4 max-h-[8rem] overflow-y-scroll scrollbar flex-wrap py-3 border-b border-border'>
+            {tags.map((tag) => {
+              const { id, name, BookmarkTag } = tag
+              return (
+                <div key={id} className='inline-flex w-auto items-center'>
+                  <Link
+                    className='flex rounded-full items-center w-auto hover:bg-accent/80 dark:hover:bg-accent dark:active:bg-accent transition-colors focus:bg-accent/80'
+                    href={`/dashboard/tags/${name}`}
+                  >
+                    <Badge className='font-normal py-1.5' variant='secondary'>
+                      {name}
+                      <span className='font-medium ml-1'>({BookmarkTag.length})</span>
+                    </Badge>
+                  </Link>
+                  {/* {tag.shared ? (
+                    <SharePopover
+                      className='!py-1 px-2 ml-2 !w-7 !h-7 !rounded-full text-xs mr-0'
+                      tag={tag}
+                    >
+                      <PublicIconWithTooltip className='w-4 h-4 shrink-0' />
+                    </SharePopover>
+                  ) : null} */}
+                  <EditTag id={id} name={name} />
+                  <DeleteTag id={id} />
+                </div>
+              )
+            })}
+          </div>
+        ) : null}
+        <>
+          {bookmarks.length ? <CardList bookmarks={bookmarks} tags={tags} /> : <EmptyTagsState />}
+        </>
+      </div>
+    </>
+  )
+}

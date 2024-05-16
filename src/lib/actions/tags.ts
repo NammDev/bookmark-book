@@ -29,6 +29,7 @@ export const getTags = async () => {
       sharedHash: true,
       createdAt: true,
       updatedAt: true,
+      BookmarkTag: true,
     },
     orderBy: {
       name: 'asc',
@@ -98,6 +99,18 @@ export const addTagToBookmark = async (
   revalidateTag('supabase')
 }
 
+export const getTagsWithBookmarkIds = async () => {
+  const user = await getCachedAuthUser()
+  if (!user) return []
+
+  return await db.tag.findMany({
+    where: { userId: user.id },
+    include: {
+      BookmarkTag: true,
+    },
+  })
+}
+
 // export const deleteTag = async (tagId: Tag['id']) => {
 //   const user = await getAuthUser()
 //   if (!user) {
@@ -142,29 +155,6 @@ export const addTagToBookmark = async (
 //     return new Error('Unable to update bookmark.')
 //   }
 //   revalidateTag('supabase')
-// }
-
-// export const getTagsWithBookmarkIds = async () => {
-//   const user = await getAuthUser()
-//   if (!user) {
-//     return {}
-//   }
-
-//   const supabase = await createClient()
-//   const { data, error } = await supabase.from('bookmarks_tags').select().eq('user_id', user.id)
-
-//   if (error) {
-//     return {}
-//   }
-
-//   return data.reduce((acc: { [key: string]: number[] }, datum) => {
-//     if (!acc[datum.tag_id]) {
-//       acc[datum.tag_id] = [datum.bookmark_id]
-//     } else {
-//       acc[datum.tag_id].push(datum.bookmark_id)
-//     }
-//     return acc
-//   }, {})
 // }
 
 // export const createTagForImport = async (uploadCount: number) => {

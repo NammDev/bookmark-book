@@ -3,7 +3,7 @@
 import { revalidateTag } from 'next/cache'
 import { BookmarkInsertSchemaType } from '../validations/bookmark'
 import { db } from '../db'
-import { getCachedUser, incrementFavUsage } from './users'
+import { getCachedAuthUser, getCachedUser, incrementFavUsage } from './users'
 import { Bookmark } from '@prisma/client'
 
 export const createBookmark = async (bookmark: BookmarkInsertSchemaType) => {
@@ -11,7 +11,8 @@ export const createBookmark = async (bookmark: BookmarkInsertSchemaType) => {
     const newBookmark = await db.bookmark.create({
       data: {
         ...bookmark,
-        metadata: bookmark.metadata as NullableJsonNullValueInput | InputJsonValue | undefined,
+        //@ts-ignore
+        metadata: bookmark.metadata,
       },
     })
     revalidateTag(`bookmark`)
@@ -102,6 +103,45 @@ export const addToFav = async (id: Bookmark['id'], isFav: Bookmark['isFav']) => 
   }
 }
 
+export const getBookmarksForTag = async (slug: string) => {
+  const user = await getCachedAuthUser()
+  if (!user) return []
+
+  return await db.bookmark.findMany({
+    where: {
+      userId: user.id,
+      BookmarkTag: {
+        some: {
+          Tag: {
+            name: slug,
+          },
+        },
+      },
+    },
+    include: {
+      BookmarkTag: {
+        select: {
+          Tag: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  })
+
+  // return data.filter((datum) => {
+  //   return datum.bookmarks_tags.some((bookmarkTag) => {
+  //     return bookmarkTag.tags.name === slug
+  //   })
+  // })
+}
+
 // export const updateBookmark = async (id: Bookmark['id'], bookmark: BookmarkUpdate) => {
 //   const user = await getAuthUser()
 //   if (!user) {
@@ -165,31 +205,6 @@ export const addToFav = async (id: Bookmark['id'], isFav: Bookmark['isFav']) => 
 //     return new Error('Unable to refresh bookmark.')
 //   }
 //   revalidateTag('supabase')
-// }
-
-// export const getBookmarksForTag = async (slug: string) => {
-//   const user = await getAuthUser()
-//   if (!user) {
-//     return []
-//   }
-
-//   const supabase = await createClient()
-//   const { data, error } = await supabase
-//     .from('bookmarks')
-//     .select(`*, bookmarks_tags (tags!inner (id,name))`)
-//     .eq('user_id', user.id)
-//     .order('created_at', { ascending: false })
-//     .returns<BookmarkModified[]>()
-
-//   if (error) {
-//     return []
-//   }
-
-//   return data.filter((datum) => {
-//     return datum.bookmarks_tags.some((bookmarkTag) => {
-//       return bookmarkTag.tags.name === slug
-//     })
-//   })
 // }
 
 // export const getBookmarksAsCSV = async () => {
