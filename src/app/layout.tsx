@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
-import Script from 'next/script'
 import { ClerkProvider } from '@clerk/nextjs'
 
 import './globals.css'
@@ -8,8 +7,6 @@ import { ThemeProvider } from '@/components/layouts/theme-provider'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { Toaster } from '@/components/ui/sonner'
 import NextTopLoader from 'nextjs-toploader'
-import { UserProvider } from '@/components/layouts/user-provider'
-import { getCachedUser } from '@/lib/actions/users'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
 
@@ -77,29 +74,25 @@ export const viewport: Viewport = {
 // const GOOGLE_ANALYTICS_ID = process.env.GA4_ANALYTICS_ID
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const user = await getCachedUser()
-  if (!user) return null
   return (
     <ClerkProvider>
       <html lang='en' className='h-full' suppressHydrationWarning>
         <body className={`${inter.className} flex h-full bg-background`}>
-          <UserProvider user={user}>
-            <NextTopLoader height={2} shadow={false} color='#cb0000' showSpinner={false} />
-            <ThemeProvider
-              attribute='class'
-              defaultTheme='system'
-              enableSystem
-              disableTransitionOnChange
-            >
-              <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
-            </ThemeProvider>
-            <Toaster
-              expand
-              visibleToasts={2}
-              richColors
-              toastOptions={{ className: 'max-sm:mb-[4.5rem]' }}
-            />
-          </UserProvider>
+          <NextTopLoader height={2} shadow={false} color='#cb0000' showSpinner={false} />
+          <ThemeProvider
+            attribute='class'
+            defaultTheme='system'
+            enableSystem
+            disableTransitionOnChange
+          >
+            <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
+          </ThemeProvider>
+          <Toaster
+            expand
+            visibleToasts={2}
+            richColors
+            toastOptions={{ className: 'max-sm:mb-[4.5rem]' }}
+          />
         </body>
 
         {/* <!-- Google tag (gtag.js) --> */}

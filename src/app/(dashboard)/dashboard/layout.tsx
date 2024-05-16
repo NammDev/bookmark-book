@@ -1,5 +1,8 @@
 import Sidebar from '@/components/layouts/sidebar'
+import { UserProvider } from '@/components/layouts/user-provider'
+import { getCachedUser } from '@/lib/actions/users'
 import type { Metadata } from 'next'
+import { redirect } from 'next/navigation'
 
 const title = 'Bookmark it. | Home'
 const description =
@@ -46,12 +49,18 @@ export const metadata: Metadata = {
 export default async function DashboardLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const user = await getCachedUser()
+  if (!user) {
+    redirect('/')
+  }
   return (
-    <div className='max-w-2xl m-auto flex min-h-dvh w-full'>
-      <Sidebar />
-      <main className='flex sm:ml-[69px] max-sm:pb-[69px] flex-col w-full min-h-[100vh] '>
-        {children}
-      </main>
-    </div>
+    <UserProvider user={user}>
+      <div className='max-w-2xl m-auto flex min-h-dvh w-full'>
+        <Sidebar />
+        <main className='flex sm:ml-[69px] max-sm:pb-[69px] flex-col w-full min-h-[100vh] '>
+          {children}
+        </main>
+      </div>
+    </UserProvider>
   )
 }
