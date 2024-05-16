@@ -3,16 +3,15 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 import Loader, { DeleteIcon } from '../icons'
-import { incrementTagUsage } from '@/lib/actions/users'
 import { Tag } from '@prisma/client'
+import { deleteTag } from '@/lib/actions/tags'
 
 export default function DeleteTag({ id }: { id: Tag['id'] }) {
   const [loading, setLoading] = useState(false)
   const onDelete = async (id: Tag['id']) => {
     try {
       setLoading(true)
-      await incrementTagUsage(-1)
-      // await deleteTag(id)
+      await deleteTag(id)
       toast.success('Tag has been deleted.')
     } catch {
       toast.error('Unable to delete tag, try again')

@@ -134,12 +134,6 @@ export const getBookmarksForTag = async (slug: string) => {
       createdAt: 'desc',
     },
   })
-
-  // return data.filter((datum) => {
-  //   return datum.bookmarks_tags.some((bookmarkTag) => {
-  //     return bookmarkTag.tags.name === slug
-  //   })
-  // })
 }
 
 // export const updateBookmark = async (id: Bookmark['id'], bookmark: BookmarkUpdate) => {

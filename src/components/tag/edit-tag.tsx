@@ -3,6 +3,7 @@
 import { Tag } from '@prisma/client'
 import { useState } from 'react'
 import { EditIcon } from '../icons'
+import EditBookmark from '../modal/edit-tag'
 
 type EditTagProps = {
   id: Tag['id']
@@ -22,7 +23,7 @@ export default function EditTag({ id, name }: EditTagProps) {
       >
         <EditIcon className='text-blue-500 w-4 h-4' />
       </button>
-      {/* {open ? <EditTagModal open={true} setOpen={setOpen} id={id} name={name} /> : null} */}
+      {open ? <EditBookmark open={true} setOpen={setOpen} id={id} name={name} /> : null}
     </>
   )
 }

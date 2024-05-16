@@ -2,7 +2,7 @@
 
 import { revalidateTag } from 'next/cache'
 import { formatDate } from '@/lib/date'
-import { getCachedAuthUser } from './users'
+import { getCachedAuthUser, incrementTagUsage } from './users'
 import { db } from '../db'
 import { Bookmark, Tag } from '@prisma/client'
 import { TagInsertType } from '../validations/tag'
@@ -96,7 +96,7 @@ export const addTagToBookmark = async (
       },
     })
   }
-  revalidateTag('supabase')
+  revalidateTag('tags')
 }
 
 export const getTagsWithBookmarkIds = async () => {
@@ -111,51 +111,43 @@ export const getTagsWithBookmarkIds = async () => {
   })
 }
 
-// export const deleteTag = async (tagId: Tag['id']) => {
-//   const user = await getAuthUser()
-//   if (!user) {
-//     return new Error('User is not authenticated.')
-//   }
+export const deleteTag = async (tagId: Tag['id']) => {
+  const user = await getCachedAuthUser()
+  if (!user) return []
 
-//   const supabase = await createClient()
+  try {
+    await db.bookmarkTag.deleteMany({
+      where: {
+        tagId,
+      },
+    })
+    await db.tag.delete({
+      where: {
+        id: tagId,
+      },
+    })
+    await incrementTagUsage(-1)
+  } catch (error) {
+    console.log(error)
+  }
 
-//   const { error: bookmarkError } = await supabase
-//     .from('bookmarks_tags')
-//     .delete()
-//     .eq('tag_id', tagId)
-//     .eq('user_id', user.id)
+  revalidateTag('tags')
+}
 
-//   if (bookmarkError) {
-//     return new Error('Unable to delete tag from bookmarks.')
-//   }
+export const updateTag = async (id: Bookmark['id'], name: Tag['name']) => {
+  const user = await getCachedAuthUser()
+  if (!user) return []
 
-//   const { error } = await supabase.from('tags').delete().eq('id', tagId).eq('user_id', user.id)
-
-//   if (error) {
-//     return new Error('Unable to delete the tag.')
-//   }
-
-//   revalidateTag('supabase')
-// }
-
-// export const updateTag = async (id: Bookmark['id'], name: Tag['name']) => {
-//   const user = await getAuthUser()
-//   if (!user) {
-//     return new Error('User is not authenticated.')
-//   }
-
-//   const supabase = await createClient()
-//   const { error } = await supabase
-//     .from('tags')
-//     .update({ name } as TagInsert)
-//     .eq('id', id)
-//     .eq('user_id', user.id)
-
-//   if (error) {
-//     return new Error('Unable to update bookmark.')
-//   }
-//   revalidateTag('supabase')
-// }
+  await db.tag.update({
+    where: {
+      id,
+    },
+    data: {
+      name: name,
+    },
+  })
+  revalidateTag('tags')
+}
 
 // export const createTagForImport = async (uploadCount: number) => {
 //   const user = await getAuthUser()
