@@ -1,3 +1,10 @@
+import Extensions from '@/components/home/extensions'
+import Faq from '@/components/home/faq'
+import Features from '@/components/home/features'
+import GitButton from '@/components/home/git-button'
+import Pricing from '@/components/home/pricing'
+import Account from '@/components/home/signup'
+import { Tweet } from '@/components/tweet/tweets'
 import { tweetIds } from '@/config/tweetIds'
 
 export default async function Page() {
@@ -15,10 +22,10 @@ export default async function Page() {
         <p className='text-muted-foreground leading-7 mt-3 sm:text-lg mx-auto max-w-xl tracking-normal text-center'>
           Effortlessly Bookmark, Categorize, and Favorite your websites.
         </p>
-        {/* <Signup /> */}
+        <Account />
       </div>
 
-      {/* <Features /> */}
+      <Features />
 
       <div className='mx-auto w-full h-full relative my-8 mt-10 sm:mt-20  flex flex-col items-center'>
         <h2 className='mt-4 mb-0 text-3xl font-extrabold tracking-[-0.03em] text-center text-primary sm:text-4xl sm:leading-[3.5rem]'>
@@ -34,7 +41,7 @@ export default async function Page() {
           <div className='animate-marquee gap-6 hover:animation-pause items-center w-full max-w-[90vw] flex'>
             {tweetIds.map((id) => (
               <div key={id} data-theme='light'>
-                {/* <Tweet id={id} /> */}
+                <Tweet id={id} />
               </div>
             ))}
           </div>
@@ -43,9 +50,9 @@ export default async function Page() {
         </div>
       </div>
 
-      {/* <Extensions />
-        <Pricing />
-        <Faq /> */}
+      <Extensions />
+      <Pricing />
+      <Faq />
 
       <div className='mx-auto mt-0 sm:mt-16  flex flex-col items-center'>
         <h2 className='mt-4 text-3xl font-extrabold tracking-[-0.03em] text-primary sm:text-4xl sm:leading-[3.5rem]'>
@@ -57,7 +64,7 @@ export default async function Page() {
         <p className='mt-3 mb-10 text-muted-foreground leading-7 sm:text-lg w-[80%] text-center'>
           Our source code is available on GitHub - feel free to read, review, or contribute to it.
         </p>
-        {/* <GitButton /> */}
+        <GitButton />
       </div>
     </>
   )

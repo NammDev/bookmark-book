@@ -8,7 +8,6 @@ export default async function LobbyLayout({ children }: Readonly<{ children: Rea
         <Header />
         {children}
       </main>
-
       <Footer />
     </div>
   )

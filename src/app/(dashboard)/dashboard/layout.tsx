@@ -43,7 +43,9 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function DashboardLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <div className='max-w-2xl m-auto flex min-h-dvh w-full'>
       <Sidebar />
