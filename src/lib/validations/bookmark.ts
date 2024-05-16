@@ -11,3 +11,12 @@ const BookmarkInsertSchema = z.object({
 })
 
 export type BookmarkInsertSchemaType = z.infer<typeof BookmarkInsertSchema>
+
+const BookmarkRefreshSchema = z.object({
+  title: z.string().optional(),
+  description: z.string().nullable().optional(),
+  metadata: z.unknown().optional(),
+  previewImage: z.boolean().optional(),
+})
+
+export type BookmarkRefreshSchemaType = z.infer<typeof BookmarkRefreshSchema>

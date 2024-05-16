@@ -20,13 +20,10 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
 import { BookmarkModified, MetaTags } from '@/types/data'
-
-// import { addToFav, deleteBookmark, refreshBookmark } from 'app/actions/bookmarks'
-// import { incrementBookmarkUsage, incrementFavUsage } from 'app/actions/user'
-
-// import { refreshInChromeExt } from 'lib/chrome-extension'
-
-// import EditBookmark from 'components/modal/edit-bookmark'
+import { addToFav, deleteBookmark, refreshBookmark } from '@/lib/actions/bookmarks'
+import { incrementBookmarkUsage, incrementFavUsage } from '@/lib/actions/users'
+import { getOg } from '@/lib/actions/og'
+import { BookmarkRefreshSchemaType } from '@/lib/validations/bookmark'
 
 type CardMenuProps = {
   data: BookmarkModified
@@ -40,68 +37,68 @@ export default function CardMenu({ data, className, onDone, isSearch }: CardMenu
   const [open, setOpen] = useState(false)
   const { url, id } = data
 
-  // const onRefresh = async () => {
-  //   try {
-  //     setLoading(true)
-  //     const ogData: MetaTags = await getOg(url)
-  //     const payload: BookmarkUpdate = {
-  //       metadata: {
-  //         ...((data.metadata as object) || {}),
-  //         image: ogData.image,
-  //         is_fallback: ogData.is_fallback,
-  //       },
-  //     }
-  //     if (!data.title) {
-  //       payload.title = ogData.title
-  //     }
-  //     if (!data.description) {
-  //       payload.description = ogData.description
-  //     }
-  //     await refreshBookmark(id, payload)
-  //     onDone?.()
-  //     refreshInChromeExt()
-  //     toast.success('Bookmark refreshed.')
-  //   } catch {
-  //     toast.error('Unable to refresh, try again.')
-  //   } finally {
-  //     setLoading(false)
-  //     setOpen(false)
-  //   }
-  // }
+  const onRefresh = async () => {
+    try {
+      setLoading(true)
+      const ogData = (await getOg(url)) as MetaTags
+      const payload: BookmarkRefreshSchemaType = {
+        metadata: {
+          ...((data.metadata as object) || {}),
+          image: ogData.image,
+          isFallback: ogData.isFallback,
+        },
+      }
+      if (!data.title) {
+        payload.title = ogData.title
+      }
+      if (!data.description) {
+        payload.description = ogData.description
+      }
+      await refreshBookmark(id, payload)
+      onDone?.()
+      // refreshInChromeExt()
+      toast.success('Bookmark refreshed.')
+    } catch {
+      toast.error('Unable to refresh, try again.')
+    } finally {
+      setLoading(false)
+      setOpen(false)
+    }
+  }
 
-  // const hidePreview = async () => {
-  //   try {
-  //     setLoading(true)
-  //     const payload: BookmarkUpdate = {
-  //       preview_image: !Boolean(data.preview_image),
-  //     }
-  //     await refreshBookmark(id, payload)
-  //     onDone?.()
-  //   } catch {
-  //     toast.error('Unable to hide preview, try again.')
-  //   } finally {
-  //     setLoading(false)
-  //     setOpen(false)
-  //   }
-  // }
+  const hidePreview = async () => {
+    try {
+      setLoading(true)
+      const payload: BookmarkRefreshSchemaType = {
+        previewImage: !Boolean(data.previewImage),
+      }
+      await refreshBookmark(id, payload)
+      onDone?.()
+    } catch {
+      toast.error('Unable to hide preview, try again.')
+    } finally {
+      setLoading(false)
+      setOpen(false)
+    }
+  }
 
-  // const onDelete = async () => {
-  //   try {
-  //     setLoading(true)
-  //     await incrementBookmarkUsage(-1)
-  //     if (data.is_fav) {
-  //       await incrementFavUsage(-1)
-  //     }
-  //     await deleteBookmark(id)
-  //     onDone?.()
-  //     refreshInChromeExt()
-  //     toast.success('Bookmark is deleted.')
-  //   } catch {
-  //     toast.error('Unable to delete, try again.')
-  //   } finally {
-  //     setLoading(false)
-  //   }
-  // }
+  const onDelete = async () => {
+    try {
+      setLoading(true)
+      await incrementBookmarkUsage(-1)
+      if (data.isFav) {
+        await incrementFavUsage(-1)
+      }
+      await deleteBookmark(id)
+      onDone?.()
+      // refreshInChromeExt()
+      toast.success('Bookmark is deleted.')
+    } catch {
+      toast.error('Unable to delete, try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const siteUrl = new URL(url)
   siteUrl.searchParams.append('utm_source', 'bmrk.cc')
@@ -119,19 +116,19 @@ export default function CardMenu({ data, className, onDone, isSearch }: CardMenu
     }
   }
 
-  // const onFav = async () => {
-  //   try {
-  //     setLoading(true)
-  //     await addToFav(id, !data.is_fav)
-  //     onDone?.()
-  //     toast.success(`Bookmark ${!data.is_fav ? 'added' : 'removed'} as favorite.`)
-  //   } catch {
-  //     toast.error('Unable to add as favorite, try again.')
-  //   } finally {
-  //     setLoading(false)
-  //     setOpen(false)
-  //   }
-  // }
+  const onFav = async () => {
+    try {
+      setLoading(true)
+      await addToFav(id, !data.isFav)
+      onDone?.()
+      toast.success(`Bookmark ${!data.isFav ? 'added' : 'removed'} as favorite.`)
+    } catch {
+      toast.error('Unable to add as favorite, try again.')
+    } finally {
+      setLoading(false)
+      setOpen(false)
+    }
+  }
 
   return (
     <>
@@ -166,7 +163,7 @@ export default function CardMenu({ data, className, onDone, isSearch }: CardMenu
           <DropdownMenuItem
             disabled={loading}
             onClick={async () => {
-              // await onRefresh()
+              await onRefresh()
             }}
           >
             <RefreshIcon className='h-4 w-4 mr-2' /> Refresh
@@ -174,7 +171,7 @@ export default function CardMenu({ data, className, onDone, isSearch }: CardMenu
           <DropdownMenuItem
             disabled={loading}
             onClick={async () => {
-              // await hidePreview()
+              await hidePreview()
             }}
           >
             {data.previewImage ? (
@@ -188,7 +185,7 @@ export default function CardMenu({ data, className, onDone, isSearch }: CardMenu
             <DropdownMenuItem
               disabled={loading}
               onClick={async () => {
-                // await onFav()
+                await onFav()
               }}
             >
               <FavIcon className='h-4 w-4 mr-2' /> {data.isFav ? 'Remove' : 'Add'} favorite
@@ -206,7 +203,7 @@ export default function CardMenu({ data, className, onDone, isSearch }: CardMenu
           <DropdownMenuItem
             disabled={loading}
             onClick={async () => {
-              // await onDelete()
+              await onDelete()
             }}
             className='!text-red-600 focus:bg-red-100 active:bg-red-100 dark:focus:bg-red-800/30 dark:active:bg-red-800/30'
           >

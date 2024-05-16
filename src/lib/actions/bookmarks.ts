@@ -1,7 +1,7 @@
 'use server'
 
 import { revalidateTag } from 'next/cache'
-import { BookmarkInsertSchemaType } from '../validations/bookmark'
+import { BookmarkInsertSchemaType, BookmarkRefreshSchemaType } from '../validations/bookmark'
 import { db } from '../db'
 import { getCachedAuthUser, getCachedUser, incrementFavUsage } from './users'
 import { Bookmark } from '@prisma/client'
@@ -156,50 +156,49 @@ export const getBookmarksForTag = async (slug: string) => {
 //   revalidateTag('supabase')
 // }
 
-// export const deleteBookmark = async (id: Bookmark['id']) => {
-//   const user = await getAuthUser()
-//   if (!user) {
-//     return new Error('User is not authenticated.')
-//   }
+export const deleteBookmark = async (id: Bookmark['id']) => {
+  const user = await getCachedAuthUser()
+  if (!user) return new Error('User is not authenticated.')
 
-//   const supabase = await createClient()
+  const bookmarkTag = await db.bookmarkTag.deleteMany({
+    where: {
+      bookmarkId: id,
+    },
+  })
 
-//   const { error: bookmarkError } = await supabase
-//     .from('bookmarks_tags')
-//     .delete()
-//     .eq('bookmark_id', id)
-//     .eq('user_id', user.id)
+  const bookmarkDelete = await db.bookmark.delete({
+    where: {
+      id: id,
+      userId: user.id,
+    },
+  })
 
-//   if (bookmarkError) {
-//     return new Error('Unable to delete the bookmark.')
-//   }
+  if (!bookmarkDelete || !bookmarkTag) {
+    return new Error('Unable to delete the bookmark.')
+  }
 
-//   const { error } = await supabase.from('bookmarks').delete().eq('user_id', user.id).eq('id', id)
+  revalidateTag('bookmark')
+}
 
-//   if (error) {
-//     return new Error('Unable to delete the bookmark.')
-//   }
+export const refreshBookmark = async (id: Bookmark['id'], bookmark: BookmarkRefreshSchemaType) => {
+  const user = await getCachedAuthUser()
+  if (!user) return new Error('User is not authenticated.')
 
-//   revalidateTag('supabase')
-// }
-
-// export const refreshBookmark = async (id: Bookmark['id'], payload: BookmarkUpdate) => {
-//   const user = await getAuthUser()
-//   if (!user) {
-//     return new Error('User is not authenticated.')
-//   }
-//   const supabase = await createClient()
-//   const { error } = await supabase
-//     .from('bookmarks')
-//     .update({ ...payload })
-//     .eq('id', id)
-//     .eq('user_id', user.id)
-
-//   if (error) {
-//     return new Error('Unable to refresh bookmark.')
-//   }
-//   revalidateTag('supabase')
-// }
+  try {
+    const newBookmark = await db.bookmark.update({
+      where: { id, userId: user.id },
+      data: {
+        ...bookmark,
+        //@ts-ignore
+        metadata: bookmark.metadata,
+      },
+    })
+    revalidateTag(`bookmark`)
+    return newBookmark
+  } catch (error) {
+    return new Error('Unable to create a new bookmark.')
+  }
+}
 
 // export const getBookmarksAsCSV = async () => {
 //   const user = await getAuthUser()

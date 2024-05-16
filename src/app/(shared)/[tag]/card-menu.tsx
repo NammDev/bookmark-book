@@ -1,7 +1,6 @@
 'use client'
 
 import { toast } from 'sonner'
-
 import { LinkIcon, MoreIcon, ShareIcon } from '@/components/icons'
 import {
   DropdownMenu,
@@ -9,9 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-
 import { cn } from '@/lib/utils'
-
 import { BookmarkModified } from '@/types/data'
 
 type CardMenuProps = {
