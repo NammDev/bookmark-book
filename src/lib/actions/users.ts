@@ -129,3 +129,17 @@ export const incrementTagUsage = async (count: number = 1) => {
     },
   })
 }
+
+export const incrementShareCount = async (count: number = 1) => {
+  const user = await getCachedUser()
+  if (!user) return new Error('Unable to increment usage.')
+
+  const shareCount = user.shareCount
+
+  return await db.user.update({
+    where: { id: user.id },
+    data: {
+      shareCount: shareCount + count,
+    },
+  })
+}

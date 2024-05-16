@@ -8,6 +8,7 @@ import CardList from '@/components/card-list'
 import { EmptyTagsState } from '@/components/icons'
 import { getBookmarks } from '@/lib/actions/bookmarks'
 import { getTags, getTagsWithBookmarkIds } from '@/lib/actions/tags'
+import SharePopover from '@/components/share'
 
 const title = 'Bookmark it. | Tags'
 const description =
@@ -44,14 +45,14 @@ export default async function Page() {
                       <span className='font-medium ml-1'>({BookmarkTag.length})</span>
                     </Badge>
                   </Link>
-                  {/* {tag.shared ? (
+                  {tag.shared ? (
                     <SharePopover
                       className='!py-1 px-2 ml-2 !w-7 !h-7 !rounded-full text-xs mr-0'
                       tag={tag}
                     >
                       <PublicIconWithTooltip className='w-4 h-4 shrink-0' />
                     </SharePopover>
-                  ) : null} */}
+                  ) : null}
                   <EditTag id={id} name={name} />
                   <DeleteTag id={id} />
                 </div>

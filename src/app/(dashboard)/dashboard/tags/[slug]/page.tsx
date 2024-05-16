@@ -1,12 +1,11 @@
 import CardList from '@/components/card-list'
+import { PublicIconWithTooltip } from '@/components/card/public-icon-with-tooltip'
 import DashboardHeader from '@/components/dashboard/dashboard-header'
 import { EmptyTagState } from '@/components/icons'
+import SharePopover from '@/components/share'
 import { getBookmarksForTag } from '@/lib/actions/bookmarks'
 import { getTags } from '@/lib/actions/tags'
 import { filterByTagName } from '@/lib/data'
-
-// import SharePopover from 'components/popover/share'
-// import { PublicIconWithTooltip } from 'components/public-icon-with-tooltip'
 
 const title = 'Bookmark it.'
 const description =
@@ -35,8 +34,8 @@ export default async function Page({ params }: { params: { slug: string } }) {
   return (
     <>
       <DashboardHeader
-        // icon={tag?.shared ? <PublicIconWithTooltip className='h-3 w-3 relative -top-0.5' /> : null}
-        // shareIcon={<SharePopover tag={tag} />}
+        icon={tag?.shared ? <PublicIconWithTooltip className='h-3 w-3 relative -top-0.5' /> : null}
+        shareIcon={<SharePopover tag={tag} />}
         headerText={`Tag: ${tagName}`}
       />
       <div className='h-full sm:border-r border-border pb-24'>
