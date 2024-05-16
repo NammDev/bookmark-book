@@ -19,6 +19,6 @@ export const urls = {
   github: 'https://github.com/gokulkrishh/bmrk.cc',
   extensions: {
     chrome:
-      'https://chromewebstore.google.com/detail/bookmark-it/fgnmdiklfcddmhmmmppepijecbljfjbm?utm_source=bmrk.cc',
+      'https://chromewebstore.google.com/detail/bookmark-it/fgnmdiklfcddmhmmmppepijecbljfjbm?utm_source=nammdev',
   },
 }

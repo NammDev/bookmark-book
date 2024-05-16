@@ -126,8 +126,8 @@ export default function PrivacyPage() {
       <p className='my-1 leading-7'>
         If you have any questions or suggestions about my Privacy Policy, do not hesitate to contact
         me at{' '}
-        <a className='cursor-pointer text-blue-700 underline' href='mailto:support@bmrk.cc'>
-          support@bmrk.cc
+        <a className='cursor-pointer text-blue-700 underline' href='mailto:support@nammdev.cc'>
+          support@nammdev.cc
         </a>
         .
       </p>

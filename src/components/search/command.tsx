@@ -1,16 +1,8 @@
 'use client'
 
 import { memo, useCallback, useEffect, useState } from 'react'
-
 import { StarFilledIcon } from '@radix-ui/react-icons'
 import humanizeUrl from 'humanize-url'
-
-import { getBookmarks } from 'app/actions/bookmarks'
-
-import CardFavicon from 'components/card/favicon'
-import CardMenu from 'components/card/menu'
-import TagBadge from 'components/card/tag-badge'
-import Loader from 'components/loader'
 import {
   Command,
   CommandEmpty,
@@ -21,10 +13,14 @@ import {
   CommandLoading,
   CommandSeparator,
   CommandShortcut,
-} from 'components/ui/command'
-import { Dialog, DialogContent } from 'components/ui/dialog'
-
-import { BookmarkModified } from 'types/data'
+} from '@/components/ui/command'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { BookmarkModified } from '@/types/data'
+import Loader from '../icons'
+import CardFavicon from '../card/favicon'
+import TagBadge from '../card/tag-badge'
+import CardMenu from '../card/menu'
+import { getBookmarks } from '@/lib/actions/bookmarks'
 
 type SearchCommandProps = {
   open: boolean
@@ -77,12 +73,12 @@ function SearchCommand({ open, setOpen }: SearchCommandProps) {
                 </CommandItem>
               ) : null}
               {data.map((bookmark: BookmarkModified) => {
-                const tags = bookmark.bookmarks_tags.map(({ tags: { name } }) => name)
+                const tags = bookmark.BookmarkTag.map(({ Tag: { name } }) => name)
                 return (
                   <CommandItem
                     className='flex flex-col items-start w-full'
                     onSelect={() => {
-                      openBookmark(`${bookmark.url}?utm_source=bmrk.cc`)
+                      openBookmark(`${bookmark.url}?utm_source=nammdev`)
                     }}
                     key={`${bookmark.id}`}
                     keywords={[bookmark.title ?? '', bookmark.url, ...tags]}
@@ -90,13 +86,13 @@ function SearchCommand({ open, setOpen }: SearchCommandProps) {
                     <div className='flex gap-2 items-start text-pimary-foreground w-full'>
                       <CardFavicon
                         className='bg-background w-5 h-5'
-                        url={`${bookmark.url}?utm_source=bmrk.cc`}
+                        url={`${bookmark.url}?utm_source=nammdev`}
                         title={bookmark.title ?? ''}
                       />
                       <div className='flex flex-col'>
                         <p className='relative -top-0.5'>{bookmark.title}</p>
                         <div className='text-xs flex max-w-[400px] items-center mt-0.5 w-full text-muted-foreground'>
-                          {bookmark.is_fav ? (
+                          {bookmark.isFav ? (
                             <StarFilledIcon className='!w-3 !h-3 text-yellow-500 shrink-0 mr-1' />
                           ) : null}
                           <span className='block w-full tracking-wide max-sm:max-w-[250px] truncate'>

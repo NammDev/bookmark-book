@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 import { FavIcon, HomeIcon, Logo, TagsIcon } from '../icons'
 import Profile from '../profile'
-// import SearchIcon from '../search'
+import SearchIcon from '../search'
 import NavLink from './nav-link'
 import { SettingsLink } from './setting-links'
 import AddIcon from './add-icon'
@@ -18,7 +18,7 @@ export default function Sidebar() {
           <span className='sr-only'>Home page</span>
         </Link>
         <NavLink Icon={(props: any) => <HomeIcon {...props} />} href={'/dashboard'} title='Home' />
-        {/* <SearchIcon /> */}
+        <SearchIcon />
         <NavLink
           Icon={(props: any) => <FavIcon {...props} />}
           className='max-sm:order-4'
