@@ -143,3 +143,20 @@ export const incrementShareCount = async (count: number = 1) => {
     },
   })
 }
+
+export const setImagePreview = async (previewImage: boolean) => {
+  const user = await getCachedAuthUser()
+  if (!user) return new Error('Unable to increment usage.')
+
+  try {
+    await db.user.update({
+      where: { id: user.id },
+      data: {
+        previewImage,
+      },
+    })
+  } catch (error) {
+    throw new Error("Couldn't turn on image preview")
+  }
+  revalidateTag('bookmark')
+}

@@ -9,8 +9,7 @@ import PlanTooltip from './plan-tooltip'
 import SettingsCard from './settings-card'
 import { ThemeToggle } from './theme-toggle'
 import { useUser } from '@/components/layouts/user-provider'
-
-// import { setImagePreview } from 'app/actions/user'
+import { setImagePreview } from '@/lib/actions/users'
 
 export default function Appearance() {
   const { user } = useUser()
@@ -19,7 +18,7 @@ export default function Appearance() {
   const turnOnPreview = async () => {
     try {
       setState(!state)
-      // await setImagePreview(!state)
+      await setImagePreview(!state)
       if (!state) {
         toast.info(messages.imagePreview, {
           duration: 6000,
